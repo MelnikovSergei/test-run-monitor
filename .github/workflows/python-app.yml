@@ -2,7 +2,7 @@ name: Python package
 
 on:
   push:
-    branches: [ master ]
+    branches: []
 
 env:
   GIT_HUB_KEY: ${{ vars.GIT_HUB_KEY }}
@@ -22,4 +22,4 @@ jobs:
 
     - name: Run tests
       run: |
-        python -m unittest discover -s tests -p 'test_*.py'
+        python -m unittest discover -s scr/tests -p 'test_*.py'
