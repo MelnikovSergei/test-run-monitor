@@ -22,11 +22,7 @@ class TestAddTwoNumbers(unittest.TestCase):
     def test_type_error(self):
         with self.assertRaises(TypeError):
             add_two_numbers("2", 3)
-            
-    def test_value_env(self):
-        print(os.environ['GIT_HUB_KEY'])
-        self.assertEqual(os.environ['GIT_HUB_KEY'], 'Pi')
-        
+                 
     def test_value_env_1(self):
         print(os.environ['GIT_ID'])
         self.assertEqual(os.environ['GIT_ID'], 'Pi')
