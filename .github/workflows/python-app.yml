@@ -5,8 +5,8 @@ on:
     branches: [ master ]
 
 env:
-  GIT_HUB_KEY: ${{ vars.GIT_HUB_KEY }}
-  GIT_ID: ${{ vars.GIT_ID }}
+  GIT_HUB_KEY: ${{ secrets.GIT_HUB_KEY }}
+  GIT_ID: ${{ secrets.GIT_ID }}
 
 jobs:
   build-and-test:
