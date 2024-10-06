@@ -16,8 +16,13 @@ class Project:
         """
         
         self.path = path
+        self.test_suites = {}
         
-    def get_path(self):
+        
+    
+        
+        
+    def get_path(self) -> str:
         """
         Returns the path to the project directory.
 
@@ -29,3 +34,15 @@ class Project:
         
         return self.path
     
+    def get_suites_statuses(self) -> list:
+        return [self.test_suites[suite]["status"] for suite in self.test_suites]
+            
+    def run_test_suite(self, suite_name: str) -> None:
+        pass
+    
+    def add_test_suite(self, suite_name: str) -> None:
+        self.test_suites[suite_name] = {
+            'status': 'not run',
+            'last_result': '',
+            'execution_time': '',        
+        }
