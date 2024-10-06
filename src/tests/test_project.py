@@ -9,7 +9,9 @@ class TestProject(unittest.TestCase):
     def test_get_project_path(self):
         self.assertIsNone(self.project.get_path())
         
-       
+    def test_set_project_path(self):
+        self.project.path = 'test'
+        self.assertEqual(self.project.get_path(), 'test')
         
         
         
