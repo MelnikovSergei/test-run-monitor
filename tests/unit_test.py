@@ -15,5 +15,12 @@ class TestAddTwoNumbers(unittest.TestCase):
     def test_zero(self):
         self.assertEqual(add_two_numbers(0, 0), 0)
 
+    def test_large_numbers(self):
+        self.assertEqual(add_two_numbers(1000000, 2000000), 3000000)
+
+    def test_type_error(self):
+        with self.assertRaises(TypeError):
+            add_two_numbers("2", 3)
+
 if __name__ == '__main__':
     unittest.main()

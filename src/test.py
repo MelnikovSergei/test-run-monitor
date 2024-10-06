@@ -13,8 +13,6 @@ def add_two_numbers(a: int, b: int) -> int:
     -------
     int
         The sum of the two numbers. 
-        # ! DO NOT REMOVE THIS LINE
-        # TODO Add a docstring
     """
 
     return a + b
