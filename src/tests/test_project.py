@@ -1,5 +1,5 @@
 import unittest
-from src.project import Project
+from src.utils.project import Project
 
 
 class TestProject(unittest.TestCase):
@@ -7,7 +7,7 @@ class TestProject(unittest.TestCase):
         self.project = Project()
 
     def test_get_project_path(self):
-        pass
+        self.assertIsNone(self.project.get_path())
         
        
         

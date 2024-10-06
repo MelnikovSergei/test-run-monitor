@@ -5,7 +5,7 @@ class Project:
     A class representing a project.
     """
 
-    def __init__(self, path):
+    def __init__(self, path = None):
         """
         Initializes a new instance of the Project class.
 
