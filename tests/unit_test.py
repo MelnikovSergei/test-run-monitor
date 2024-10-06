@@ -24,6 +24,7 @@ class TestAddTwoNumbers(unittest.TestCase):
             add_two_numbers("2", 3)
             
     def test_value_env(self):
+        print(os.environ['GIT_HUB_KEY'])
         self.assertEqual(os.environ['GIT_HUB_KEY'], 'Pi')
         
 
