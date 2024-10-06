@@ -1,4 +1,5 @@
 import unittest
+import os
 from src.test import add_two_numbers
 
 
@@ -21,6 +22,10 @@ class TestAddTwoNumbers(unittest.TestCase):
     def test_type_error(self):
         with self.assertRaises(TypeError):
             add_two_numbers("2", 3)
+            
+    def test_value_env(self):
+        self.assertEqual(os.getenv('GIT_HUB_KEY'), 'Pi')
+        
 
 if __name__ == '__main__':
     unittest.main()
