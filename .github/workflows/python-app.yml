@@ -4,6 +4,9 @@ on:
   push:
     branches: [ master ]
 
+env:
+  GIT_HUB_KEY: ${{ secrets.GIT_HUB_KEY }}
+  GIT_ID: ${{ vars.GIT_ID }}
 
 
 jobs:
@@ -19,9 +22,6 @@ jobs:
         python-version: '3.9'
 
     - name: Run tests
-      env:
-        GIT_HUB_KEY: ${{ vars.GIT_HUB_KEY }}
-        GIT_ID: ${{ vars.GIT_ID }}
       run: |
         python -m unittest discover -s tests -p 'test_*.py'
         
