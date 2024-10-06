@@ -14,8 +14,6 @@ class TestProject(unittest.TestCase):
         self.assertEqual(self.project.get_path(), 'test')
         
         
-        
-        
 
 if __name__ == '__main__':
-    unittest.main()
+    unittest.main(start_dir='src/tests')
