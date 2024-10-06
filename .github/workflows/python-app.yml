@@ -2,7 +2,7 @@ name: Python package
 
 on:
   push:
-    branches: [ master ]
+    branches: []
 
 env:
   GIT_HUB_KEY: ${{ vars.GIT_HUB_KEY }}
