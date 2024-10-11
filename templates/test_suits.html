@@ -1,0 +1,10 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <h1>Test Suits</h1>
+    <ul>
+        {% for test_suit in test_suits %}
+            <li>{{ test_suit.name }} ({{ test_suit.id }})</li>
+        {% endfor %}
+    </ul>
+{% endblock %}

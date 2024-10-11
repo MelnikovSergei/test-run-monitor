@@ -7,14 +7,7 @@ app.config['SQLALCHEMY_DATABASE_URI'] = 'postgres://user:password@db:5432/databa
 db = SQLAlchemy(app)
 login_manager = LoginManager(app)
 
-class User(db.Model, UserMixin):
-    id = db.Column(db.Integer, primary_key=True)
-    username = db.Column(db.String(20), unique=True, nullable=False)
-    password = db.Column(db.String(60), nullable=False)
-
-@login_manager.user_loader
-def load_user(user_id):
-    return User.query.get(int(user_id))
+from models import Project, TestSuit
 
 @app.route('/')
 def index():
@@ -35,5 +28,21 @@ def new_project():
         return f'Project {name} created successfully!'
     return render_template('new_project.html')
 
+@app.route('/test_suits')
+def test_suits():
+    test_suits = TestSuit.query.all()
+    return render_template('test_suits.html', test_suits=test_suits)
+
+@app.route('/test_suits/new', methods=['GET', 'POST'])
+def new_test_suit():
+    if request.method == 'POST':
+        name = request.form['name']
+        test_suit = TestSuit(name=name)
+        db.session.add(test_suit)
+        db.session.commit()
+        return f'Test suit {name} created successfully!'
+    return render_template('new_test_suit.html')
+
 if __name__ == '__main__':
     app.run(debug=True)
+    
