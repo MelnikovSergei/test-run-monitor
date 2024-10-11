@@ -1,5 +1,5 @@
 from flask import Flask, render_template, request, jsonify
-from src.utils.project import Project
+from utils.project import Project
 app = Flask(__name__)
 project = Project()
 project.name = "test"
@@ -10,10 +10,12 @@ def index():
 
 @app.route('/add_project', methods=['POST'])
 def add_project():
-    project.add_test_suite(request.form['project_name'])
+    data = request.get_json()
+    project_name = data['project_name']
+    project.add_test_suite(project_name)
     print(project.test_suites)
     # Add project to database or perform other tasks
-    return f'Project {project.test_suites} has been added successfully!'
+    return jsonify({'message': f'Project {project_name} has been added successfully!'})
 
 @app.route('/check-status', methods=['POST'])
 def check_status():

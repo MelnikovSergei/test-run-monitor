@@ -6,11 +6,29 @@
 <script src="{{ url_for('static', filename='script.js') }}"></script>
 <body>
     <h1>Project Manager</h1>
-    <form action="/add_project" method="POST">
+    <form id="project-form" action="/add_project" method="POST">
         <label for="project_name">Project Name:</label>
         <input type="text" id="project_name" name="project_name" required>
         <input type="submit" value="Add Project">
     </form>
+    
+    <script>
+      document.getElementById("project-form").addEventListener("submit", function(event) {
+        event.preventDefault(); // Prevent form from submitting normally
+    
+        var project_name = document.getElementById("project_name").value;
+        var xhr = new XMLHttpRequest();
+        xhr.open("POST", "/add_project");
+        xhr.setRequestHeader("Content-Type", "application/json");
+        xhr.onreadystatechange = function() {
+          if (xhr.readyState === 4 && xhr.status === 200) {
+            var response = JSON.parse(xhr.responseText);
+            document.getElementById("status-message").innerHTML = response.message;
+          }
+        };
+        xhr.send(JSON.stringify({ project_name: project_name }));
+      });
+    </script>
     <button id="check-status-btn" onclick="checkStatus()">Check Status</button>
     <input id="suite-name" type="text" placeholder="Enter suite name">
     <div id="status-popup" style="display: none; position: absolute; background-color: #fff; border: 1px solid #ddd; padding: 10px; width: 200px; height: 100px;">
