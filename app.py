@@ -1,48 +1,86 @@
-from flask import Flask, render_template, request
+from flask import Flask, jsonify, request, render_template
 from flask_sqlalchemy import SQLAlchemy
-from flask_login import LoginManager, UserMixin
+import os
 
 app = Flask(__name__)
-app.config['SQLALCHEMY_DATABASE_URI'] = 'postgres://user:password@db:5432/database'
+
+# Set up SQLite database
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///test_monitor.db'
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+
 db = SQLAlchemy(app)
-login_manager = LoginManager(app)
 
-from models import Project, TestSuit
+# Define the models
+class Project(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(100), nullable=False)
+    test_suites = db.relationship('TestSuite', backref='project', lazy=True)
 
+class TestSuite(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(100), nullable=False)
+    status = db.Column(db.String(50), nullable=False, default='not_run')  # Default to 'not_run'
+    project_id = db.Column(db.Integer, db.ForeignKey('project.id'), nullable=False)
+
+# Function to create the tables if they don't exist
+def create_tables():
+    with app.app_context():
+        db.create_all()
+
+# Route to get the frontend
 @app.route('/')
 def index():
     return render_template('index.html')
 
-@app.route('/projects')
-def projects():
+# API route to add a project
+@app.route('/api/projects', methods=['POST'])
+def add_project():
+    data = request.json
+    project_name = data.get('name')
+    test_suites = data.get('test_suites')
+
+    # Create a new project
+    new_project = Project(name=project_name)
+    db.session.add(new_project)
+    db.session.flush()
+
+    # Create test suites
+    for suite_name in test_suites:
+        new_suite = TestSuite(name=suite_name, project_id=new_project.id)
+        db.session.add(new_suite)
+
+    db.session.commit()
+    return jsonify({'message': 'Project created successfully'}), 201
+
+# API route to get all projects and their test suites
+@app.route('/api/projects', methods=['GET'])
+def get_projects():
     projects = Project.query.all()
-    return render_template('projects.html', projects=projects)
+    project_data = []
+    for project in projects:
+        project_data.append({
+            'id': project.id,
+            'name': project.name,
+            'test_suites': [{'id': ts.id, 'name': ts.name, 'status': ts.status} for ts in project.test_suites]
+        })
+    return jsonify(project_data)
 
-@app.route('/projects/new', methods=['GET', 'POST'])
-def new_project():
-    if request.method == 'POST':
-        name = request.form['name']
-        project = Project(name=name)
-        db.session.add(project)
-        db.session.commit()
-        return f'Project {name} created successfully!'
-    return render_template('new_project.html')
+# API route to update test suite status
+@app.route('/api/test-suite/<int:test_suite_id>', methods=['PATCH'])
+def update_test_suite_status(test_suite_id):
+    data = request.json
+    new_status = data.get('status')
+    
+    test_suite = TestSuite.query.get(test_suite_id)
+    if not test_suite:
+        return jsonify({'message': 'Test suite not found'}), 404
 
-@app.route('/test_suits')
-def test_suits():
-    test_suits = TestSuit.query.all()
-    return render_template('test_suits.html', test_suits=test_suits)
+    test_suite.status = new_status
+    db.session.commit()
 
-@app.route('/test_suits/new', methods=['GET', 'POST'])
-def new_test_suit():
-    if request.method == 'POST':
-        name = request.form['name']
-        test_suit = TestSuit(name=name)
-        db.session.add(test_suit)
-        db.session.commit()
-        return f'Test suit {name} created successfully!'
-    return render_template('new_test_suit.html')
+    return jsonify({'message': 'Status updated successfully'})
 
 if __name__ == '__main__':
-    app.run(debug=True)
-    
+    # Ensure tables are created when the application starts
+    create_tables()
+    app.run(host='0.0.0.0', debug=True)

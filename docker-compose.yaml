@@ -1,24 +1,12 @@
 version: '3'
+
 services:
-  app:
+  test_monitor:
     build: .
     ports:
       - "5000:5000"
-    depends_on:
-      - db
-    environment:
-      - FLASK_APP=app.py
-      - FLASK_ENV=development
-      - DATABASE_URL=postgres://helly:cvbncvbn@db:5432/projects
-
-  db:
-    image: postgres
-    environment:
-      - POSTGRES_USER=helly
-      - POSTGRES_PASSWORD=cvbncvbn
-      - POSTGRES_DB=projects
     volumes:
-      - db-data:/var/lib/postgresql/data
-
-volumes:
-  db-data:
+      - .:/app
+    environment:
+      - FLASK_ENV=development
+    command: python app.py

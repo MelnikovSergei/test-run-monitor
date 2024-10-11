@@ -1,5 +1,110 @@
-{% extends "base.html" %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Run Monitor</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+        }
+        .container {
+            margin: 20px;
+        }
+        .project {
+            margin-bottom: 20px;
+            padding: 10px;
+            border: 1px solid #ccc;
+        }
+        .status {
+            padding: 5px;
+            color: white;
+            border-radius: 5px;
+        }
+        .not_run {
+            background-color: grey;
+        }
+        .in_progress {
+            background-color: yellow;
+            color: black;
+        }
+        .failed {
+            background-color: red;
+        }
+        .passed {
+            background-color: green;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Test Run Monitor</h1>
 
-{% block content %}
-    <h1>Welcome to Flask App</h1>
-{% endblock %}
+        <!-- Button to add a project -->
+        <button id="addProjectBtn">+ Add Project</button>
+
+        <!-- Projects container -->
+        <div id="projectsContainer"></div>
+    </div>
+
+    <script>
+        // Load existing projects on page load
+        document.addEventListener('DOMContentLoaded', loadProjects);
+
+        // Add new project
+        document.getElementById('addProjectBtn').addEventListener('click', addProject);
+
+        function loadProjects() {
+            fetch('/api/projects')
+                .then(response => response.json())
+                .then(projects => {
+                    const container = document.getElementById('projectsContainer');
+                    container.innerHTML = ''; // Clear existing
+                    projects.forEach(project => {
+                        const projectDiv = document.createElement('div');
+                        projectDiv.classList.add('project');
+                        projectDiv.innerHTML = `<h2>${project.name}</h2>`;
+                        
+                        project.test_suites.forEach(suite => {
+                            const suiteDiv = document.createElement('div');
+                            suiteDiv.classList.add('suite');
+                            suiteDiv.innerHTML = `
+                                <span>${suite.name}</span>
+                                <span class="status ${suite.status}" id="status-${suite.id}">${suite.status}</span>
+                                <button onclick="changeStatus(${suite.id}, 'in_progress')">In Progress</button>
+                                <button onclick="changeStatus(${suite.id}, 'passed')">Pass</button>
+                                <button onclick="changeStatus(${suite.id}, 'failed')">Fail</button>
+                            `;
+                            projectDiv.appendChild(suiteDiv);
+                        });
+                        
+                        container.appendChild(projectDiv);
+                    });
+                });
+        }
+
+        function addProject() {
+            const projectName = prompt('Enter project name:');
+            const testSuites = prompt('Enter test suite names (comma separated):').split(',');
+
+            fetch('/api/projects', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ name: projectName, test_suites: testSuites })
+            })
+            .then(response => response.json())
+            .then(() => loadProjects());
+        }
+
+        function changeStatus(suiteId, newStatus) {
+            fetch(`/api/test-suite/${suiteId}`, {
+                method: 'PATCH',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ status: newStatus })
+            })
+            .then(response => response.json())
+            .then(() => loadProjects());
+        }
+    </script>
+</body>
+</html>
