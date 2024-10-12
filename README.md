@@ -1,3 +1,5 @@
+###### skeleton version (still in development). Ideal for practicing automated test writing for a project.
+
 
 # Test Run Monitor
 
