@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Run Monitor</title>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/styles.css') }}">
+</head>
+<body>
+    <!-- Sidebar -->
+    <div class="sidebar">
+        <!-- Replaced the button with an input box -->
+        <input type="text" id="addProjectInput" placeholder="New Project" class="add-project-input">
+        <ul class="menu" id="projectsList"></ul>
+    </div>
+
+    <!-- Main Area for Test Suites -->
+    <div class="main-area" id="mainArea">
+        <div class="title-container">
+            <h1 id="selectedProjectName">Test Suites</h1>
+            <button id="removeProjectBtn" class="remove-project-btn">Remove Project</button>
+        </div>
+        <input type="text" id="addTestSuiteInput" placeholder="Type and press Enter" class="add-test-suite-input">
+        <div class="test-suite-list" id="testSuitesContainer"></div>
+    </div>
+    
+
+    <!-- Right Panel for Test Suite Details -->
+    <div class="right-panel" id="rightPanel">
+        <div class="right-panel-content" id="rightPanelContent">
+            <h3 id="suiteName"></h3>
+            <p>Status: <span id="suiteStatus"></span></p>
+            <p>Execution Time: <span id="suiteExecutionTime"></span></p>
+            <p>Last Run: <span id="suiteLastRun"></span></p>
+
+            <!-- Buttons to interact with the test suite -->
+            <button id="inProgressBtn">In Progress</button>
+            <button id="passBtn">Pass</button>
+            <button id="failBtn">Fail</button>
+            <button id="removeSuiteBtn">Remove Test Suite</button>
+
+            <!-- Close Button for Right Panel -->
+            <button id="closePanelBtn" class="close-panel">Close</button>
+        </div>
+    </div>
+
+    <script src="{{ url_for('static', filename='js/app.js') }}"></script>
+</body>
+</html>
