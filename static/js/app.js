@@ -39,6 +39,7 @@ function loadTestSuites(project) {
 
     project.test_suites.forEach(suite => {
         const suiteDiv = document.createElement('div');
+        suiteDiv.id = `suite-${suite.id}`; // Use the ID to uniquely identify the suite
         suiteDiv.classList.add('suite-item', suite.status);
         suiteDiv.innerHTML = `
             <h3>${suite.name}</h3>
@@ -64,6 +65,11 @@ function openTestSuiteDetails(suite) {
     suiteStatus.textContent = suite.status;
     suiteExecutionTime.textContent = suite.execution_time || 'N/A';
     suiteLastRun.textContent = suite.last_run_timestamp || 'N/A';
+
+    // Add event listeners for the status update buttons inside the details panel
+    document.getElementById('inProgressBtn').onclick = () => updateTestSuiteStatus('in_progress');
+    document.getElementById('passBtn').onclick = () => updateTestSuiteStatus('passed');
+    document.getElementById('failBtn').onclick = () => updateTestSuiteStatus('failed');
 
     // Slide in the right panel and adjust main area
     rightPanel.classList.add('open');
@@ -126,6 +132,7 @@ function addTestSuite(testSuiteName) {
     .then(newSuite => {
         // Append the new suite to the DOM instead of reloading everything
         const suiteDiv = document.createElement('div');
+        suiteDiv.id = `suite-${newSuite.id}`;
         suiteDiv.classList.add('suite-item', newSuite.status);
         suiteDiv.innerHTML = `
             <h3>${newSuite.name}</h3>
@@ -139,3 +146,54 @@ function addTestSuite(testSuiteName) {
         alert('Failed to add test suite. Please try again.');
     });
 }
+
+// Function to update the status of the selected test suite
+function updateTestSuiteStatus(newStatus) {
+    if (!selectedTestSuite) return;
+
+    fetch(`/api/test-suite/${selectedTestSuite.id}`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ status: newStatus })
+    })
+    .then(response => response.json())
+    .then(() => {
+        selectedTestSuite.status = newStatus;
+
+        // Update the status dynamically by targeting the suite div by its ID
+        const suiteDiv = document.getElementById(`suite-${selectedTestSuite.id}`);
+        if (suiteDiv) {
+            // Remove previous status classes and add the new one
+            suiteDiv.classList.remove('failed', 'passed', 'in_progress', 'not_run');
+            suiteDiv.classList.add(newStatus);
+            suiteDiv.querySelector('p').textContent = `Status: ${newStatus}`;
+        }
+    })
+    .catch(error => {
+        console.error('Error updating test suite status:', error);
+        alert('Failed to update status. Please try again.');
+    });
+}
+
+// Function to remove a test suite dynamically without refreshing
+document.getElementById('removeSuiteBtn').addEventListener('click', () => {
+    if (!selectedTestSuite) return;
+
+    fetch(`/api/test-suite/${selectedTestSuite.id}`, {
+        method: 'DELETE'
+    })
+    .then(() => {
+        const suiteDiv = document.getElementById(`suite-${selectedTestSuite.id}`);
+        if (suiteDiv) {
+            suiteDiv.remove();
+        }
+
+        // Close the right panel after removal
+        document.getElementById('rightPanel').classList.remove('open');
+        document.getElementById('mainArea').classList.remove('adjusted');
+    })
+    .catch(error => {
+        console.error('Error removing test suite:', error);
+        alert('Failed to remove test suite. Please try again.');
+    });
+});

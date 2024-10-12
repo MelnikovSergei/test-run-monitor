@@ -187,3 +187,55 @@ h1 {
 .right-panel-content button:disabled {
     background-color: #7f8c8d;
 }
+/* General Input Styling */
+.add-project-input,
+.add-test-suite-input {
+    width: 90%;  /* Adjust input size */
+    padding: 10px;
+    margin-bottom: 15px;
+    border: 1px solid #d1d1d1;
+    border-radius: 10px;
+    font-size: 1rem;
+    outline: none;
+    transition: all 0.3s ease;
+}
+
+/* Test Suite Styling */
+.test-suite-list {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;  /* Add some spacing between test suites */
+    width: 70%; /* Reduced width of the test suite list */
+}
+
+.suite-item {
+    background-color: #ffffff;
+    padding: 15px;
+    border-radius: 10px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    cursor: pointer;
+    transition: box-shadow 0.3s ease, background-color 0.3s ease;
+    width: 100%; /* Adjusted width to fit the main area */
+}
+
+/* Color indicators for statuses */
+.suite-item.failed {
+    background-color: #f8d7da;
+    border-left: 5px solid #e74c3c;
+}
+
+.suite-item.passed {
+    background-color: #d4edda;
+    border-left: 5px solid #2ecc71;
+}
+
+.suite-item.in_progress {
+    background-color: #fff3cd;
+    border-left: 5px solid #f39c12;
+}
+
+.suite-item.not_run {
+    background-color: #d6d8db;
+    border-left: 5px solid #7f8c8d;
+}
+
