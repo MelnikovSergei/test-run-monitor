@@ -6,6 +6,10 @@ from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.chrome.options import Options
 from selenium.common.exceptions import NoAlertPresentException
 
+def SHORT_WAIT(wait_time: int = 1):
+    time.sleep(wait_time)
+    
+    
 
 def setup_chrome_driver():
     chrome_options = Options()
@@ -33,7 +37,7 @@ def test_add_project(browser):
     project_input.send_keys("Test Project")
     project_input.send_keys(Keys.ENTER)
 
-    time.sleep(1)  # Wait for the project to be added
+    SHORT_WAIT()
 
     # Verify that the project appears in the sidebar
     projects = browser.find_elements(By.CSS_SELECTOR, ".menu-item a")
@@ -46,7 +50,7 @@ def test_remove_project(browser):
     project_input.send_keys("Project to Remove")
     project_input.send_keys(Keys.ENTER)
 
-    time.sleep(1)  # Wait for the project to be added
+    SHORT_WAIT()  # Wait for the project to be added
 
     # Select the project we just added
     project_links = browser.find_elements(By.CSS_SELECTOR, ".menu-item a")
@@ -55,14 +59,14 @@ def test_remove_project(browser):
             project.click()
             break
 
-    time.sleep(1)  # Wait for the project selection
+    SHORT_WAIT()  # Wait for the project selection
 
     # Click the remove button
     remove_button = browser.find_element(By.ID, "removeProjectBtn")
     remove_button.click()
 
     # Wait for the project to be removed
-    time.sleep(1)
+    SHORT_WAIT()
 
     # Check that the project is no longer in the list
     projects = browser.find_elements(By.CSS_SELECTOR, ".menu-item a")
@@ -75,7 +79,7 @@ def test_add_test_suite(browser):
     project_input.send_keys("Test Project with Suites")
     project_input.send_keys(Keys.ENTER)
 
-    time.sleep(1)
+    SHORT_WAIT()
 
     # Select the project we just added
     project_links = browser.find_elements(By.CSS_SELECTOR, ".menu-item a")
@@ -84,14 +88,14 @@ def test_add_test_suite(browser):
             project.click()
             break
 
-    time.sleep(1)
+    SHORT_WAIT()
 
     # Add a test suite to the project
     suite_input = browser.find_element(By.ID, "addTestSuiteInput")
     suite_input.send_keys("Test Suite 1")
     suite_input.send_keys(Keys.ENTER)
 
-    time.sleep(1)
+    SHORT_WAIT()
 
     # Verify the suite is added in the main area
     suites = browser.find_elements(By.CSS_SELECTOR, ".suite-item")
@@ -104,7 +108,7 @@ def test_update_test_suite_status(browser):
     project_input.send_keys("Project with Status Test")
     project_input.send_keys(Keys.ENTER)
 
-    time.sleep(1)
+    SHORT_WAIT()
 
     # Select the project we just added
     project_links = browser.find_elements(By.CSS_SELECTOR, ".menu-item a")
@@ -113,14 +117,14 @@ def test_update_test_suite_status(browser):
             project.click()
             break
 
-    time.sleep(1)
+    SHORT_WAIT()
 
     # Add a test suite to the project
     suite_input = browser.find_element(By.ID, "addTestSuiteInput")
     suite_input.send_keys("Status Test Suite")
     suite_input.send_keys(Keys.ENTER)
 
-    time.sleep(1)
+    SHORT_WAIT()
 
     # Open the test suite details
     suite_divs = browser.find_elements(By.CSS_SELECTOR, ".suite-item")
@@ -129,13 +133,13 @@ def test_update_test_suite_status(browser):
             suite_div.click()
             break
 
-    time.sleep(1)
+    SHORT_WAIT()
 
     # Change the status to 'in progress'
     in_progress_button = browser.find_element(By.ID, "inProgressBtn")
     in_progress_button.click()
 
-    time.sleep(1)
+    SHORT_WAIT()
 
     # Verify that the status is updated in the main area
     suite_divs = browser.find_elements(By.CSS_SELECTOR, ".suite-item")
@@ -148,7 +152,7 @@ def test_remove_project(browser):
     project_input.send_keys("Project to Remove")
     project_input.send_keys(Keys.ENTER)
 
-    time.sleep(1)  # Wait for the project to be added
+    SHORT_WAIT()  # Wait for the project to be added
 
     # Select the project we just added
     project_links = browser.find_elements(By.CSS_SELECTOR, ".menu-item a")
@@ -157,7 +161,7 @@ def test_remove_project(browser):
             project.click()
             break
 
-    time.sleep(1)  # Wait for the project selection
+    SHORT_WAIT()  # Wait for the project selection
 
     # Click the remove button
     remove_button = browser.find_element(By.ID, "removeProjectBtn")
@@ -167,7 +171,7 @@ def test_remove_project(browser):
     try:
         alert = browser.switch_to.alert
         alert.accept()  # Accept the alert (click OK)
-        time.sleep(1)  # Wait for the project to be removed
+        SHORT_WAIT() # Wait for the project to be removed
     except NoAlertPresentException:
         pass  # If no alert is present, continue as usual
 
