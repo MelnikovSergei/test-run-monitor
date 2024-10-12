@@ -7,27 +7,36 @@
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/styles.css') }}">
 </head>
 <body>
-
     <!-- Sidebar -->
     <div class="sidebar">
-        <!-- Add Project Button at the top -->
         <button class="add-project-btn" id="addProjectBtn">+ Add Project</button>
-
-        <ul class="menu" id="projectsList">
-            <!-- Dynamic list of projects will be populated here -->
-        </ul>
+        <ul class="menu" id="projectsList"></ul>
     </div>
 
-    <!-- Main Content Area -->
-    <div class="container">
+    <!-- Main Area for Test Suites -->
+    <div class="main-area" id="mainArea">
         <h1 id="selectedProjectName">Test Suites</h1>
+        <button class="add-test-suite-btn" id="addTestSuiteBtn">+ Add Test Suite</button>
+        <div class="test-suite-list" id="testSuitesContainer"></div>
+    </div>
 
-        <!-- Add Test Suite Button -->
-        <button id="addTestSuiteBtn">+ Add Test Suite</button>
+    <!-- Right Panel for Test Suite Details -->
+    <div class="right-panel" id="rightPanel">
+        <div class="right-panel-content" id="rightPanelContent">
+            <!-- Test suite details will be populated here -->
+            <h3 id="suiteName"></h3>
+            <p>Status: <span id="suiteStatus"></span></p>
+            <p>Execution Time: <span id="suiteExecutionTime"></span></p>
+            <p>Last Run: <span id="suiteLastRun"></span></p>
 
-        <!-- Dynamic content for test suites -->
-        <div class="projects-grid" id="testSuitesContainer">
-            <!-- Test suites for the selected project will be dynamically added here -->
+            <!-- Buttons to interact with the test suite -->
+            <button id="inProgressBtn">In Progress</button>
+            <button id="passBtn">Pass</button>
+            <button id="failBtn">Fail</button>
+            <button id="removeSuiteBtn">Remove Test Suite</button>
+
+            <!-- Close Button for Right Panel -->
+            <button id="closePanelBtn" class="close-panel">Close</button>
         </div>
     </div>
 

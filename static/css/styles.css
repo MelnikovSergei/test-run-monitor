@@ -6,23 +6,23 @@ body {
     padding: 0;
     display: flex;
     height: 100vh;
+    overflow: hidden;
 }
+
 /* Sidebar Styling */
 .sidebar {
     background-color: #1c3f94;
     width: 250px;
     height: 100%;
     padding: 20px;
-    box-shadow: 2px 0 12px rgba(0, 0, 0, 0.1);
     display: flex;
     flex-direction: column;
-    justify-content: space-between;
 }
 
 .sidebar .menu {
     list-style-type: none;
     padding: 0;
-    margin: 0;
+    margin: 20px 0;
 }
 
 .sidebar .menu li {
@@ -30,6 +30,7 @@ body {
     cursor: pointer;
     font-size: 1rem;
     font-weight: bold;
+    transition: background-color 0.3s ease;
 }
 
 .sidebar .menu li a {
@@ -45,133 +46,135 @@ body {
     background-color: #3b66d1;
 }
 
-.sidebar .menu li.red {
-    color: red;
-}
-
-.sidebar .menu li.green {
-    color: green;
-}
-
 .sidebar .add-project-btn {
     background-color: #2ecc71;
     color: white;
     padding: 12px;
     border-radius: 25px;
     text-align: center;
-    font-weight: bold;
     cursor: pointer;
-    transition: background-color 0.3s ease;
+    font-weight: bold;
+    margin-bottom: 20px;
 }
 
-.sidebar .add-project-btn:hover {
-    background-color: #27ae60;
-}
-
-/* Main Content Area */
-.container {
+/* Main Area */
+.main-area {
     flex-grow: 1;
-    padding: 20px 40px;
-    overflow-y: auto;
+    padding: 20px;
     display: flex;
     flex-direction: column;
-    gap: 20px;
+    justify-content: flex-start;
+    width: calc(100% - 250px); /* Make sure the main area is adjusted properly */
+    transition: margin-right 0.4s ease;
+}
+
+.main-area.adjusted {
+    margin-right: 300px; /* Adjust the main area when the right panel is open */
 }
 
 h1 {
     font-size: 2rem;
-    color: #333;
-    text-align: center;
+    margin-bottom: 20px;
 }
 
-/* Add Test Suite Button */
-#addTestSuiteBtn {
-    background-color: #3498db;
+.add-test-suite-btn {
+    background-color: #2ecc71;
     color: white;
-    font-size: 0.9rem;
-    font-weight: bold;
-    padding: 10px 15px;
+    padding: 10px;
+    margin-bottom: 20px;
     border-radius: 25px;
-    border: none;
-    box-shadow: 0 3px 8px rgba(0, 0, 0, 0.1);
-    transition: background-color 0.3s ease, box-shadow 0.3s ease;
     cursor: pointer;
-    text-align: center;
-    width: 200px;
-    align-self: center;
-    margin-bottom: 20px; /* Adds space from the test suites list */
+    border: none;
+    font-weight: bold;
+    transition: background-color 0.3s;
+    width: fit-content; /* Ensure the button fits its content */
 }
 
-#addTestSuiteBtn:hover {
-    background-color: #2980b9;
-    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
-}
-
-/* Project Grid */
-.projects-grid {
-    display: flex;
-    flex-direction: column;
-    gap: 15px;
-    margin-top: 20px;
-}
-
-/* More Compact Test Suite Styling */
-.suite {
-    background-color: #f9f9f9;
-    padding: 12px;
-    border-radius: 8px;
-    margin-bottom: 10px;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
-}
-
-.suite .status {
-    display: inline-block;
-    padding: 5px 10px;
-    font-size: 0.85rem;
-    border-radius: 20px;
-    color: white;
-}
-
-.passed {
+.add-test-suite-btn:hover {
     background-color: #27ae60;
 }
 
-.failed {
+.test-suite-list {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.test-suite-list .suite-item {
+    background-color: #fff;
+    padding: 15px;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+    cursor: pointer;
+    transition: box-shadow 0.2s ease, background-color 0.2s ease;
+    width: 100%; /* Ensure the test suite takes full width */
+}
+
+.test-suite-list .suite-item:hover {
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.1);
+}
+
+.suite-item.failed {
+    background-color: #f8d7da;
+}
+
+.suite-item.passed {
+    background-color: #d4edda;
+}
+
+.suite-item.in_progress {
+    background-color: #fff3cd;
+}
+
+.suite-item.not_run {
+    background-color: #d6d8db;
+}
+
+/* Right Panel */
+.right-panel {
+    position: fixed;
+    right: -300px;
+    top: 0;
+    width: 300px;
+    height: 100%;
+    background-color: #fff;
+    box-shadow: -2px 0 12px rgba(0, 0, 0, 0.1);
+    transition: right 0.4s ease;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    z-index: 10;
+}
+
+.right-panel.open {
+    right: 0;
+}
+
+.close-panel {
     background-color: #e74c3c;
-}
-
-.not_run {
-    background-color: #bdc3c7;
-}
-
-.in_progress {
-    background-color: #f1c40f;
-    color: #2c3e50;
-}
-
-/* Button Styling */
-button {
-    background-color: #3498db;
     color: white;
     border: none;
-    padding: 8px 12px;
-    font-size: 0.85rem;
+    padding: 10px;
+    margin-top: 20px;
     border-radius: 5px;
     cursor: pointer;
-    margin-top: 5px;
-    transition: background-color 0.3s ease;
 }
 
-button:hover {
-    background-color: #2980b9;
-}
-
-/* Remove Test Suite Button */
-.remove-suite-btn {
-    background-color: #e74c3c;
-    margin-top: 10px;
-}
-
-.remove-suite-btn:hover {
+.close-panel:hover {
     background-color: #c0392b;
+}
+
+.right-panel-content button {
+    margin: 5px 0;
+    padding: 10px;
+    border-radius: 5px;
+    border: none;
+    color: white;
+    cursor: pointer;
+    background-color: #3498db;
+    transition: background-color 0.3s;
+}
+
+.right-panel-content button:hover {
+    background-color: #2980b9;
 }
