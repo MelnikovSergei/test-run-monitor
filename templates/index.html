@@ -9,21 +9,22 @@
 <body>
     <!-- Sidebar -->
     <div class="sidebar">
-        <button class="add-project-btn" id="addProjectBtn">+ Add Project</button>
+        <!-- Replaced the button with an input box -->
+        <input type="text" id="addProjectInput" placeholder="Add a new project" class="add-project-input">
         <ul class="menu" id="projectsList"></ul>
     </div>
 
     <!-- Main Area for Test Suites -->
     <div class="main-area" id="mainArea">
         <h1 id="selectedProjectName">Test Suites</h1>
-        <button class="add-test-suite-btn" id="addTestSuiteBtn">+ Add Test Suite</button>
+        <!-- Replaced the button with an input box -->
+        <input type="text" id="addTestSuiteInput" placeholder="Add a new test suite" class="add-test-suite-input">
         <div class="test-suite-list" id="testSuitesContainer"></div>
     </div>
 
     <!-- Right Panel for Test Suite Details -->
     <div class="right-panel" id="rightPanel">
         <div class="right-panel-content" id="rightPanelContent">
-            <!-- Test suite details will be populated here -->
             <h3 id="suiteName"></h3>
             <p>Status: <span id="suiteStatus"></span></p>
             <p>Execution Time: <span id="suiteExecutionTime"></span></p>

@@ -6,12 +6,7 @@ let selectedTestSuite = null;
 // Function to load projects in the sidebar
 function loadProjects() {
     fetch('/api/projects')
-        .then(response => {
-            if (!response.ok) {
-                throw new Error('Failed to fetch projects');
-            }
-            return response.json();
-        })
+        .then(response => response.json())
         .then(projects => {
             const projectsList = document.getElementById('projectsList');
             projectsList.innerHTML = '';
@@ -26,10 +21,6 @@ function loadProjects() {
                 };
                 projectsList.appendChild(listItem);
             });
-        })
-        .catch(error => {
-            console.error('Error loading projects:', error);
-            alert('Failed to load projects. Please try again.');
         });
 }
 
@@ -42,7 +33,7 @@ function loadTestSuites(project) {
     testSuitesContainer.innerHTML = '';
 
     if (project.test_suites.length === 0) {
-        testSuitesContainer.innerHTML = '<p>No test suites available. Add one using the button above.</p>';
+        testSuitesContainer.innerHTML = '<p>No test suites available. Add one using the input above.</p>';
         return;
     }
 
@@ -88,74 +79,63 @@ document.getElementById('closePanelBtn').addEventListener('click', () => {
     mainArea.classList.remove('adjusted');
 });
 
-// Add buttons to update test suite status
-document.getElementById('inProgressBtn').addEventListener('click', () => updateTestSuiteStatus('in_progress'));
-document.getElementById('passBtn').addEventListener('click', () => updateTestSuiteStatus('passed'));
-document.getElementById('failBtn').addEventListener('click', () => updateTestSuiteStatus('failed'));
-
-// Function to update the status of the selected test suite
-function updateTestSuiteStatus(newStatus) {
-    if (!selectedTestSuite) return;
-
-    // Disable buttons while the request is in progress
-    document.getElementById('inProgressBtn').disabled = true;
-    document.getElementById('passBtn').disabled = true;
-    document.getElementById('failBtn').disabled = true;
-
-    fetch(`/api/test-suite/${selectedTestSuite.id}`, {
-        method: 'PATCH',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ status: newStatus })
-    })
-    .then(response => {
-        if (!response.ok) {
-            throw new Error('Failed to update status');
+// Add event listener for adding a project when pressing "Enter"
+document.getElementById('addProjectInput').addEventListener('keypress', function (e) {
+    if (e.key === 'Enter') {
+        const projectName = this.value.trim();
+        if (projectName) {
+            addProject(projectName);
+            this.value = ''; // Clear the input box
         }
-        return response.json();
+    }
+});
+
+// Function to add a new project
+function addProject(projectName) {
+    fetch('/api/projects', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ name: projectName, test_suites: [] })
     })
-    .then(() => {
-        selectedTestSuite.status = newStatus;
-        openTestSuiteDetails(selectedTestSuite); // Refresh the right panel with updated data
-        loadProjects(); // Reload projects to update the project status
-    })
+    .then(() => loadProjects())
     .catch(error => {
-        console.error('Error updating test suite status:', error);
-        alert('Failed to update status. Please try again.');
-    })
-    .finally(() => {
-        // Re-enable buttons after the request is complete
-        document.getElementById('inProgressBtn').disabled = false;
-        document.getElementById('passBtn').disabled = false;
-        document.getElementById('failBtn').disabled = false;
+        console.error('Error adding project:', error);
+        alert('Failed to add project. Please try again.');
     });
 }
 
-// Function to add a new test suite
-document.getElementById('addTestSuiteBtn').addEventListener('click', addTestSuite);
-
-function addTestSuite() {
-    const testSuiteName = prompt('Enter new test suite name:');
-    if (testSuiteName && selectedProjectId) {
-        fetch(`/api/projects/${selectedProjectId}/test-suite`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ name: testSuiteName })
-        })
-        .then(response => response.json())
-        .then(newSuite => {
-            // Append the new suite to the DOM instead of reloading everything
-            const suiteDiv = document.createElement('div');
-            suiteDiv.classList.add('suite-item', newSuite.status);
-            suiteDiv.innerHTML = `
-                <h3>${newSuite.name}</h3>
-                <p>Status: ${newSuite.status}</p>
-            `;
-            suiteDiv.onclick = () => openTestSuiteDetails(newSuite);
-            document.getElementById('testSuitesContainer').appendChild(suiteDiv);
-        })
-        .catch(error => {
-            console.error('Error adding test suite:', error);
-            alert('Failed to add test suite. Please try again.');
-        });
+// Add event listener for adding a test suite when pressing "Enter"
+document.getElementById('addTestSuiteInput').addEventListener('keypress', function (e) {
+    if (e.key === 'Enter') {
+        const testSuiteName = this.value.trim();
+        if (testSuiteName && selectedProjectId) {
+            addTestSuite(testSuiteName);
+            this.value = ''; // Clear the input box
+        }
     }
+});
+
+// Function to add a new test suite
+function addTestSuite(testSuiteName) {
+    fetch(`/api/projects/${selectedProjectId}/test-suite`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ name: testSuiteName })
+    })
+    .then(response => response.json())
+    .then(newSuite => {
+        // Append the new suite to the DOM instead of reloading everything
+        const suiteDiv = document.createElement('div');
+        suiteDiv.classList.add('suite-item', newSuite.status);
+        suiteDiv.innerHTML = `
+            <h3>${newSuite.name}</h3>
+            <p>Status: ${newSuite.status}</p>
+        `;
+        suiteDiv.onclick = () => openTestSuiteDetails(newSuite);
+        document.getElementById('testSuitesContainer').appendChild(suiteDiv);
+    })
+    .catch(error => {
+        console.error('Error adding test suite:', error);
+        alert('Failed to add test suite. Please try again.');
+    });
 }
