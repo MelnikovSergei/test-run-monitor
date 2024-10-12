@@ -1,7 +1,7 @@
 /* General Body Styling */
 body {
     font-family: 'Arial', sans-serif;
-    background-color: #f4f7fc;
+    background-color: #f0f4f8;
     margin: 0;
     padding: 0;
     display: flex;
@@ -19,79 +19,80 @@ body {
     flex-direction: column;
 }
 
+.sidebar .add-project-input {
+    padding: 10px;
+    margin-bottom: 20px;
+    border: 1px solid #d1d1d1;
+    border-radius: 10px;
+    font-size: 1rem;
+    outline: none;
+    width: 100%;
+    transition: all 0.3s ease;
+}
+
+.sidebar .add-project-input:focus {
+    border-color: #3498db;
+    box-shadow: 0px 0px 5px rgba(52, 152, 219, 0.5);
+}
+
 .sidebar .menu {
     list-style-type: none;
     padding: 0;
-    margin: 20px 0;
+    margin: 0;
 }
 
 .sidebar .menu li {
-    margin: 10px 0;
-    cursor: pointer;
-    font-size: 1rem;
-    font-weight: bold;
-    transition: background-color 0.3s ease;
+    margin-bottom: 10px;
 }
 
 .sidebar .menu li a {
     color: white;
     text-decoration: none;
-    padding: 10px 15px;
+    padding: 10px;
     display: block;
     border-radius: 8px;
-    transition: background-color 0.3s, color 0.3s;
+    transition: background-color 0.3s ease;
 }
 
 .sidebar .menu li a:hover {
     background-color: #3b66d1;
 }
 
-.sidebar .add-project-btn {
-    background-color: #2ecc71;
-    color: white;
-    padding: 12px;
-    border-radius: 25px;
-    text-align: center;
-    cursor: pointer;
-    font-weight: bold;
-    margin-bottom: 20px;
-}
-
-/* Main Area */
+/* Main Area Styling */
 .main-area {
     flex-grow: 1;
     padding: 20px;
     display: flex;
     flex-direction: column;
     justify-content: flex-start;
-    width: calc(100% - 250px); /* Make sure the main area is adjusted properly */
     transition: margin-right 0.4s ease;
+    overflow-y: auto;
 }
 
 .main-area.adjusted {
-    margin-right: 300px; /* Adjust the main area when the right panel is open */
+    margin-right: 300px;
 }
 
 h1 {
     font-size: 2rem;
     margin-bottom: 20px;
+    color: #333;
 }
 
-.add-test-suite-btn {
-    background-color: #2ecc71;
-    color: white;
-    padding: 10px;
+.add-test-suite-input {
+    padding: 12px;
     margin-bottom: 20px;
-    border-radius: 25px;
-    cursor: pointer;
-    border: none;
-    font-weight: bold;
-    transition: background-color 0.3s;
-    width: fit-content; /* Ensure the button fits its content */
+    border: 1px solid #d1d1d1;
+    border-radius: 10px;
+    font-size: 1rem;
+    outline: none;
+    width: 100%;
+    transition: all 0.3s ease;
 }
 
-.add-test-suite-btn:hover {
-    background-color: #27ae60;
+.add-test-suite-input:focus {
+    border-color: #3498db;
+    box-shadow: 0px 0px 5px rgba(52, 152, 219, 0.5);
 }
 
 .test-suite-list {
@@ -101,36 +102,39 @@ h1 {
 }
 
 .test-suite-list .suite-item {
-    background-color: #fff;
-    padding: 15px;
-    border-radius: 8px;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+    background-color: #ffffff;
+    padding: 20px;
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
     cursor: pointer;
     transition: box-shadow 0.2s ease, background-color 0.2s ease;
-    width: 100%; /* Ensure the test suite takes full width */
 }
 
 .test-suite-list .suite-item:hover {
-    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.15);
 }
 
 .suite-item.failed {
     background-color: #f8d7da;
+    border-left: 5px solid #e74c3c;
 }
 
 .suite-item.passed {
     background-color: #d4edda;
+    border-left: 5px solid #2ecc71;
 }
 
 .suite-item.in_progress {
     background-color: #fff3cd;
+    border-left: 5px solid #f39c12;
 }
 
 .suite-item.not_run {
     background-color: #d6d8db;
+    border-left: 5px solid #7f8c8d;
 }
 
-/* Right Panel */
+/* Right Panel Styling */
 .right-panel {
     position: fixed;
     right: -300px;
@@ -138,7 +142,7 @@ h1 {
     width: 300px;
     height: 100%;
     background-color: #fff;
-    box-shadow: -2px 0 12px rgba(0, 0, 0, 0.1);
+    box-shadow: -2px 0 10px rgba(0, 0, 0, 0.1);
     transition: right 0.4s ease;
     padding: 20px;
     display: flex;
@@ -158,6 +162,7 @@ h1 {
     margin-top: 20px;
     border-radius: 5px;
     cursor: pointer;
+    transition: background-color 0.3s ease;
 }
 
 .close-panel:hover {
@@ -166,28 +171,19 @@ h1 {
 
 .right-panel-content button {
     margin: 5px 0;
-    padding: 10px;
+    padding: 12px;
     border-radius: 5px;
     border: none;
     color: white;
     cursor: pointer;
     background-color: #3498db;
-    transition: background-color 0.3s;
+    transition: background-color 0.3s ease;
 }
 
 .right-panel-content button:hover {
     background-color: #2980b9;
 }
-.add-project-input,
-.add-test-suite-input {
-    width: 100%;
-    padding: 10px;
-    margin: 10px 0;
-    border: 1px solid #ccc;
-    border-radius: 8px;
-    font-size: 1rem;
-    outline: none;
-}
 
-.add-project-input:focus,
-.add-test-suite-input
+.right-panel-content button:disabled {
+    background-color: #7f8c8d;
+}
