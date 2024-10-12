@@ -6,7 +6,12 @@ let selectedTestSuite = null;
 // Function to load projects in the sidebar
 function loadProjects() {
     fetch('/api/projects')
-        .then(response => response.json())
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Failed to fetch projects');
+            }
+            return response.json();
+        })
         .then(projects => {
             const projectsList = document.getElementById('projectsList');
             projectsList.innerHTML = '';
@@ -21,6 +26,10 @@ function loadProjects() {
                 };
                 projectsList.appendChild(listItem);
             });
+        })
+        .catch(error => {
+            console.error('Error loading projects:', error);
+            alert('Failed to load projects. Please try again.');
         });
 }
 
@@ -31,6 +40,11 @@ function loadTestSuites(project) {
 
     projectName.innerText = project.name;
     testSuitesContainer.innerHTML = '';
+
+    if (project.test_suites.length === 0) {
+        testSuitesContainer.innerHTML = '<p>No test suites available. Add one using the button above.</p>';
+        return;
+    }
 
     project.test_suites.forEach(suite => {
         const suiteDiv = document.createElement('div');
@@ -83,15 +97,36 @@ document.getElementById('failBtn').addEventListener('click', () => updateTestSui
 function updateTestSuiteStatus(newStatus) {
     if (!selectedTestSuite) return;
 
+    // Disable buttons while the request is in progress
+    document.getElementById('inProgressBtn').disabled = true;
+    document.getElementById('passBtn').disabled = true;
+    document.getElementById('failBtn').disabled = true;
+
     fetch(`/api/test-suite/${selectedTestSuite.id}`, {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ status: newStatus })
     })
+    .then(response => {
+        if (!response.ok) {
+            throw new Error('Failed to update status');
+        }
+        return response.json();
+    })
     .then(() => {
         selectedTestSuite.status = newStatus;
         openTestSuiteDetails(selectedTestSuite); // Refresh the right panel with updated data
         loadProjects(); // Reload projects to update the project status
+    })
+    .catch(error => {
+        console.error('Error updating test suite status:', error);
+        alert('Failed to update status. Please try again.');
+    })
+    .finally(() => {
+        // Re-enable buttons after the request is complete
+        document.getElementById('inProgressBtn').disabled = false;
+        document.getElementById('passBtn').disabled = false;
+        document.getElementById('failBtn').disabled = false;
     });
 }
 
@@ -106,6 +141,21 @@ function addTestSuite() {
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ name: testSuiteName })
         })
-        .then(() => loadProjectById(selectedProjectId));
+        .then(response => response.json())
+        .then(newSuite => {
+            // Append the new suite to the DOM instead of reloading everything
+            const suiteDiv = document.createElement('div');
+            suiteDiv.classList.add('suite-item', newSuite.status);
+            suiteDiv.innerHTML = `
+                <h3>${newSuite.name}</h3>
+                <p>Status: ${newSuite.status}</p>
+            `;
+            suiteDiv.onclick = () => openTestSuiteDetails(newSuite);
+            document.getElementById('testSuitesContainer').appendChild(suiteDiv);
+        })
+        .catch(error => {
+            console.error('Error adding test suite:', error);
+            alert('Failed to add test suite. Please try again.');
+        });
     }
 }
