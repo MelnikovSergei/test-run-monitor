@@ -12,7 +12,6 @@ from selenium.webdriver.support import expected_conditions as EC
 def SHORT_WAIT(wait_time: int = 1):
     time.sleep(wait_time)
     
-
 def wait_for_element(driver, locator, timeout=10):
     return WebDriverWait(driver, timeout).until(
         EC.presence_of_element_located(locator)
