@@ -1,22 +1,57 @@
-name: Python package
+name: CI for Docker App with Selenium Tests
 
 on:
   push:
-    branches: []
-
-env:
-  GIT_HUB_KEY: ${{ vars.GIT_HUB_KEY }}
-
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
 
 jobs:
-  build-and-test:
+  build:
     runs-on: ubuntu-latest
+
+    services:
+      # Service for running your docker-compose app
+      app:
+        image: docker/compose:1.29.2
+        options: --privileged
+        ports:
+          - 5000:5000  # Replace with your app's port
+        volumes:
+          - .:/app
+        env:
+          FLASK_ENV: testing  # Set env if necessary
+        # Start docker-compose
+        command: bash -c "docker-compose up --build -d && sleep 10"
+
     steps:
+    # Step 1: Checkout the repository
     - name: Checkout code
-      uses: actions/checkout@v4.2.0
+      uses: actions/checkout@v2
 
-    - name: Set up Python 3.11
-      uses: actions/setup-python@v4
+    # Step 2: Set up Python
+    - name: Set up Python
+      uses: actions/setup-python@v2
       with:
-        python-version: '3.11'
+        python-version: '3.x'
 
+    # Step 3: Install dependencies
+    - name: Install dependencies
+      run: |
+        pip install selenium pytest
+
+    # Step 4: Wait for Docker app to start
+    - name: Wait for the app to be ready
+      run: |
+        # Retry waiting for the application to start (replace with your URL)
+        for i in `seq 1 10`; do
+          curl http://localhost:5000 && break
+          sleep 5
+        done
+
+    # Step 5: Run the tests using pytest
+    - name: Run UI tests
+      run: |
+        pytest test_ui.py --maxfail=1 --disable-warnings
