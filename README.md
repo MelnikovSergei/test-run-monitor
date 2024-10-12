@@ -47,14 +47,7 @@ This is a web-based application for managing and monitoring test suites and proj
    pip install -r requirements.txt
    ```
 
-3. **Run the application**:
-   ```bash
-   flask run
-   ```
-
-   The application will run locally at `http://127.0.0.1:5000`.
-
-4. **Run with Docker**:
+3. **Run with Docker**:
    If you prefer running the application in Docker, you can use the Docker Compose setup:
    ```bash
    docker-compose up --build
@@ -62,7 +55,7 @@ This is a web-based application for managing and monitoring test suites and proj
 
    Access the application at `http://localhost:5000`.
 
-5. **Running Tests**:
+4. **Running Tests**:
    - To run **UI tests** (Selenium):
      ```bash
      pytest tests/test_ui.py
@@ -75,13 +68,7 @@ This is a web-based application for managing and monitoring test suites and proj
 
 ## Running Tests in CI/CD Pipeline
 
-The project is configured with **GitHub Actions** to run the tests automatically on every push or pull request. The CI/CD pipeline is defined in the `.github/workflows/ci.yml` file.
-
-To run the tests locally using Docker:
-
-```bash
-docker-compose exec app pytest
-```
+The project is configured with **GitHub Actions** to run the tests automatically on every push or pull request. The CI/CD pipeline is defined in the `.github/workflows/python-app.yml` file.
 
 ## API Endpoints
 
