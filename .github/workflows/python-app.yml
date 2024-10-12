@@ -19,8 +19,8 @@ jobs:
           - .:/app
         env:
           FLASK_ENV: testing  # Set env if necessary
-        # Start docker-compose
-      command: bash -c "docker-compose up --build -d && sleep 10"
+        # No need to wrap the command in 'bash -c'
+        command: docker-compose up --build -d
 
     steps:
     # Step 1: Checkout the repository
@@ -38,7 +38,7 @@ jobs:
       run: |
         pip install selenium pytest
 
-    # Step 4: Wait for Docker app to start
+    # Step 4: Wait for Docker app to be ready
     - name: Wait for the app to be ready
       run: |
         # Retry waiting for the application to start (replace with your URL)
