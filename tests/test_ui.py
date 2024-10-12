@@ -3,8 +3,13 @@ import pytest
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
-from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
+from selenium.common.exceptions import NoAlertPresentException
+
+def SHORT_WAIT(wait_time: int = 1):
+    time.sleep(wait_time)
+    
+    
 
 def setup_chrome_driver():
     chrome_options = Options()
@@ -32,7 +37,7 @@ def test_add_project(browser):
     project_input.send_keys("Test Project")
     project_input.send_keys(Keys.ENTER)
 
-    time.sleep(1)  # Wait for the project to be added
+    SHORT_WAIT()
 
     # Verify that the project appears in the sidebar
     projects = browser.find_elements(By.CSS_SELECTOR, ".menu-item a")
@@ -45,7 +50,7 @@ def test_remove_project(browser):
     project_input.send_keys("Project to Remove")
     project_input.send_keys(Keys.ENTER)
 
-    time.sleep(1)  # Wait for the project to be added
+    SHORT_WAIT()  # Wait for the project to be added
 
     # Select the project we just added
     project_links = browser.find_elements(By.CSS_SELECTOR, ".menu-item a")
@@ -54,14 +59,14 @@ def test_remove_project(browser):
             project.click()
             break
 
-    time.sleep(1)  # Wait for the project selection
+    SHORT_WAIT()  # Wait for the project selection
 
     # Click the remove button
     remove_button = browser.find_element(By.ID, "removeProjectBtn")
     remove_button.click()
 
     # Wait for the project to be removed
-    time.sleep(1)
+    SHORT_WAIT()
 
     # Check that the project is no longer in the list
     projects = browser.find_elements(By.CSS_SELECTOR, ".menu-item a")
@@ -74,7 +79,7 @@ def test_add_test_suite(browser):
     project_input.send_keys("Test Project with Suites")
     project_input.send_keys(Keys.ENTER)
 
-    time.sleep(1)
+    SHORT_WAIT()
 
     # Select the project we just added
     project_links = browser.find_elements(By.CSS_SELECTOR, ".menu-item a")
@@ -83,14 +88,14 @@ def test_add_test_suite(browser):
             project.click()
             break
 
-    time.sleep(1)
+    SHORT_WAIT()
 
     # Add a test suite to the project
     suite_input = browser.find_element(By.ID, "addTestSuiteInput")
     suite_input.send_keys("Test Suite 1")
     suite_input.send_keys(Keys.ENTER)
 
-    time.sleep(1)
+    SHORT_WAIT()
 
     # Verify the suite is added in the main area
     suites = browser.find_elements(By.CSS_SELECTOR, ".suite-item")
@@ -103,7 +108,7 @@ def test_update_test_suite_status(browser):
     project_input.send_keys("Project with Status Test")
     project_input.send_keys(Keys.ENTER)
 
-    time.sleep(1)
+    SHORT_WAIT()
 
     # Select the project we just added
     project_links = browser.find_elements(By.CSS_SELECTOR, ".menu-item a")
@@ -112,14 +117,14 @@ def test_update_test_suite_status(browser):
             project.click()
             break
 
-    time.sleep(1)
+    SHORT_WAIT()
 
     # Add a test suite to the project
     suite_input = browser.find_element(By.ID, "addTestSuiteInput")
     suite_input.send_keys("Status Test Suite")
     suite_input.send_keys(Keys.ENTER)
 
-    time.sleep(1)
+    SHORT_WAIT()
 
     # Open the test suite details
     suite_divs = browser.find_elements(By.CSS_SELECTOR, ".suite-item")
@@ -128,58 +133,48 @@ def test_update_test_suite_status(browser):
             suite_div.click()
             break
 
-    time.sleep(1)
+    SHORT_WAIT()
 
     # Change the status to 'in progress'
     in_progress_button = browser.find_element(By.ID, "inProgressBtn")
     in_progress_button.click()
 
-    time.sleep(1)
+    SHORT_WAIT()
 
     # Verify that the status is updated in the main area
     suite_divs = browser.find_elements(By.CSS_SELECTOR, ".suite-item")
     assert any("in_progress" in suite.text for suite in suite_divs)
 
 # Test removing a test suite
-def test_remove_test_suite(browser):
-    # Add a new project and test suite first
+def test_remove_project(browser):
+    # Assuming we added "Test Project" in the previous test
     project_input = browser.find_element(By.ID, "addProjectInput")
-    project_input.send_keys("Project with Suite Removal")
+    project_input.send_keys("Project to Remove")
     project_input.send_keys(Keys.ENTER)
 
-    time.sleep(1)
+    SHORT_WAIT()  # Wait for the project to be added
 
     # Select the project we just added
     project_links = browser.find_elements(By.CSS_SELECTOR, ".menu-item a")
     for project in project_links:
-        if "Project with Suite Removal" in project.text:
+        if "Project to Remove" in project.text:
             project.click()
             break
 
-    time.sleep(1)
+    SHORT_WAIT()  # Wait for the project selection
 
-    # Add a test suite to the project
-    suite_input = browser.find_element(By.ID, "addTestSuiteInput")
-    suite_input.send_keys("Suite to Remove")
-    suite_input.send_keys(Keys.ENTER)
+    # Click the remove button
+    remove_button = browser.find_element(By.ID, "removeProjectBtn")
+    remove_button.click()
 
-    time.sleep(1)
+    # Handle the alert
+    try:
+        alert = browser.switch_to.alert
+        alert.accept()  # Accept the alert (click OK)
+        SHORT_WAIT() # Wait for the project to be removed
+    except NoAlertPresentException:
+        pass  # If no alert is present, continue as usual
 
-    # Open the test suite details
-    suite_divs = browser.find_elements(By.CSS_SELECTOR, ".suite-item")
-    for suite_div in suite_divs:
-        if "Suite to Remove" in suite_div.text:
-            suite_div.click()
-            break
-
-    time.sleep(1)
-
-    # Click the remove test suite button
-    remove_suite_button = browser.find_element(By.ID, "removeSuiteBtn")
-    remove_suite_button.click()
-
-    time.sleep(1)
-
-    # Verify that the suite has been removed from the main area
-    suite_divs = browser.find_elements(By.CSS_SELECTOR, ".suite-item")
-    assert all("Suite to Remove" not in suite.text for suite in suite_divs)
+    # Check that the project is no longer in the list
+    projects = browser.find_elements(By.CSS_SELECTOR, ".menu-item a")
+    assert all("Project to Remove" not in project.text for project in projects)

@@ -180,7 +180,7 @@ function addTestSuite(testSuiteName) {
 
 // Function to update the status of the selected test suite
 function updateTestSuiteStatus(newStatus) {
-    if (!selectedTestSuite) return;
+    if (!selectedTestSuite) {return;}
 
     fetch(`/api/test-suite/${selectedTestSuite.id}`, {
         method: 'PATCH',
@@ -208,7 +208,7 @@ function updateTestSuiteStatus(newStatus) {
 
 // Function to remove a test suite dynamically without refreshing
 document.getElementById('removeSuiteBtn').addEventListener('click', () => {
-    if (!selectedTestSuite) return;
+    if (!selectedTestSuite) {return;}
 
     fetch(`/api/test-suite/${selectedTestSuite.id}`, {
         method: 'DELETE'
