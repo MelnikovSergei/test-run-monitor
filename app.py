@@ -93,9 +93,11 @@ def update_project(project_id):
 # API route to delete a project by ID
 @app.route('/api/projects/<int:project_id>', methods=['DELETE'])
 def delete_project(project_id):
-    project = Project.query.get_or_404(project_id)
+    project = Project.query.get(project_id)
+    if not project:
+        return jsonify({'message': 'Project not found'}), 404
 
-    # Delete all associated test suites
+    # Delete associated test suites
     TestSuite.query.filter_by(project_id=project_id).delete()
 
     db.session.delete(project)

@@ -68,6 +68,7 @@ body {
     justify-content: flex-start;
     transition: margin-right 1.3s ease-in-out;
     overflow-y: auto;
+    padding-right: 50px;
 }
 
 .main-area.adjusted {
@@ -143,6 +144,10 @@ h1 {
 
 .right-panel.open {
     right: 0;
+}
+/* When right panel opens, hide the remove button */
+.right-panel.open ~ .remove-project-btn {
+    display: none;   /* Hides the button */
 }
 
 .close-panel {
@@ -230,3 +235,27 @@ h1 {
     border-left: 5px solid #7f8c8d;
 }
 
+.title-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.remove-project-btn {
+    background-color: #e74c3c;
+    color: white;
+    border: none;
+    padding: 5px 10px;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+    position: fixed;   /* Fixed position */
+    right: 30px;  /* Align it to the right of the screen */
+    top: 20px;    /* Adjust based on where you want it */
+    z-index: 10;  /* Ensure it stays above other elements */
+}
+
+.remove-project-btn:hover {
+    background-color: #c0392b;
+}

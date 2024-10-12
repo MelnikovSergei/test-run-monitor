@@ -110,6 +110,37 @@ function addProject(projectName) {
     });
 }
 
+// Add event listener for the Remove Project button
+document.getElementById('removeProjectBtn').addEventListener('click', removeProject);
+
+// Function to remove the selected project
+function removeProject() {
+    if (!selectedProjectId) {
+        alert('No project selected to remove');
+        return;
+    }
+
+    // Make a DELETE request to the backend API to remove the project
+    fetch(`/api/projects/${selectedProjectId}`, {
+        method: 'DELETE'
+    })
+    .then(response => {
+        if (!response.ok) {
+            throw new Error('Failed to remove project');
+        }
+        // After successful deletion, reload the projects
+        loadProjects();
+        // Clear the test suites area and selected project name
+        document.getElementById('testSuitesContainer').innerHTML = '';
+        document.getElementById('selectedProjectName').innerText = 'Test Suites';
+    })
+    .catch(error => {
+        console.error('Error removing project:', error);
+        alert('Failed to remove project. Please try again.');
+    });
+}
+
+
 // Add event listener for adding a test suite when pressing "Enter"
 document.getElementById('addTestSuiteInput').addEventListener('keypress', function (e) {
     if (e.key === 'Enter') {

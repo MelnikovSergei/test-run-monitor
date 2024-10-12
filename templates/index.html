@@ -16,11 +16,14 @@
 
     <!-- Main Area for Test Suites -->
     <div class="main-area" id="mainArea">
-        <h1 id="selectedProjectName">Test Suites</h1>
-        <!-- Replaced the button with an input box -->
+        <div class="title-container">
+            <h1 id="selectedProjectName">Test Suites</h1>
+            <button id="removeProjectBtn" class="remove-project-btn">Remove Project</button>
+        </div>
         <input type="text" id="addTestSuiteInput" placeholder="Type and press Enter" class="add-test-suite-input">
         <div class="test-suite-list" id="testSuitesContainer"></div>
     </div>
+    
 
     <!-- Right Panel for Test Suite Details -->
     <div class="right-panel" id="rightPanel">
