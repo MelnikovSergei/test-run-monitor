@@ -19,10 +19,12 @@ jobs:
 
     # Step 3: Install Docker Compose (download the standalone binary)
     - name: Install Docker Compose
+      env:
+        DOCKER_COMPOSE_VERSION: latest
       run: |
-        sudo curl -L "https://github.com/docker/compose/releases/download/v2.15.1/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
+        LATEST_VERSION=$(curl -s https://api.github.com/repos/docker/compose/releases/latest | grep -oP '"tag_name": "\K(.*)(?=")')
+        sudo curl -L "https://github.com/docker/compose/releases/download/${DOCKER_COMPOSE_VERSION:-$LATEST_VERSION}/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
         sudo chmod +x /usr/local/bin/docker-compose
-        docker-compose --version
 
     # Step 4: Set up Python environment (for running Selenium tests)
     - name: Set up Python
