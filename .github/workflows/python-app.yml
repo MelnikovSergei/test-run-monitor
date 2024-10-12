@@ -13,16 +13,22 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v2
 
-    # Step 2: Set up Docker
+    # Step 2: Set up Docker Buildx
     - name: Set up Docker Buildx
       uses: docker/setup-buildx-action@v1
 
-    # Step 3: Build and run the application using Docker Compose
+    # Step 3: Install Docker Compose
+    - name: Install Docker Compose
+      run: |
+        sudo apt-get update
+        sudo apt-get install docker-compose-plugin
+
+    # Step 4: Build and run the application using Docker Compose
     - name: Build and run app with Docker Compose
       run: |
-        docker-compose up --build -d
+        docker compose up --build -d
 
-    # Step 4: Wait for Docker app to be ready
+    # Step 5: Wait for Docker app to be ready
     - name: Wait for the app to be ready
       run: |
         # Retry waiting for the application to start (replace with your URL)
@@ -31,23 +37,23 @@ jobs:
           sleep 5
         done
 
-    # Step 5: Set up Python
+    # Step 6: Set up Python
     - name: Set up Python
       uses: actions/setup-python@v2
       with:
         python-version: '3.x'
 
-    # Step 6: Install dependencies
+    # Step 7: Install dependencies
     - name: Install dependencies
       run: |
         pip install selenium pytest
 
-    # Step 7: Run the tests using pytest
+    # Step 8: Run the tests using pytest
     - name: Run UI tests
       run: |
         pytest test_ui.py --maxfail=1 --disable-warnings
 
-    # Step 8: Tear down Docker Compose after the tests
+    # Step 9: Tear down Docker Compose after the tests
     - name: Tear down Docker Compose
       run: |
-        docker-compose down
+        docker compose down
