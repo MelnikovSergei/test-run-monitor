@@ -3,8 +3,6 @@ import pytest
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
-from selenium.webdriver.support.ui import WebDriverWait
-from selenium.webdriver.support import expected_conditions as EC
 
 @pytest.fixture
 def browser():
@@ -56,7 +54,7 @@ def test_remove_project(browser):
 
     # Check that the project is no longer in the list
     projects = browser.find_elements(By.CSS_SELECTOR, ".menu-item a")
-    assert not any("Project to Remove" in p.text for p in projects)
+    assert all("Project to Remove" not in p.text for p in projects)
 
 # Test adding a new test suite
 def test_add_test_suite(browser):

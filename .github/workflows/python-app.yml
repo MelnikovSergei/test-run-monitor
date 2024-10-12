@@ -24,7 +24,7 @@ jobs:
         env:
           FLASK_ENV: testing  # Set env if necessary
         # Start docker-compose
-        command: bash -c "docker-compose up --build -d && sleep 10"
+      command: bash -c "docker-compose up --build -d && sleep 10"
 
     steps:
     # Step 1: Checkout the repository
