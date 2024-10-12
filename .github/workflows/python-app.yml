@@ -2,11 +2,7 @@ name: CI for Docker App with Selenium Tests
 
 on:
   push:
-    branches:
-      - main
-  pull_request:
-    branches:
-      - main
+    branches: []
 
 jobs:
   build:
