@@ -60,7 +60,7 @@ function openTestSuiteDetails(suite) {
     const suiteExecutionTime = document.getElementById('suiteExecutionTime');
     const suiteLastRun = document.getElementById('suiteLastRun');
     const mainArea = document.getElementById('mainArea');
-
+    
     suiteName.textContent = suite.name;
     suiteStatus.textContent = suite.status;
     suiteExecutionTime.textContent = suite.execution_time || 'N/A';

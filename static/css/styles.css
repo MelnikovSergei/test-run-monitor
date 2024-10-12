@@ -22,11 +22,12 @@ body {
 .sidebar .add-project-input {
     padding: 10px;
     margin-bottom: 20px;
-    border: 1px solid #d1d1d1;
+    border: 2px solid #d1d1d1;
     border-radius: 10px;
+    margin-top: 10px;
     font-size: 1rem;
     outline: none;
-    width: 100%;
+    width: 90%;
     transition: all 0.3s ease;
 }
 
@@ -65,7 +66,7 @@ body {
     display: flex;
     flex-direction: column;
     justify-content: flex-start;
-    transition: margin-right 0.4s ease;
+    transition: margin-right 1.3s ease-in-out;
     overflow-y: auto;
 }
 
@@ -79,16 +80,6 @@ h1 {
     color: #333;
 }
 
-.add-test-suite-input {
-    padding: 12px;
-    margin-bottom: 20px;
-    border: 1px solid #d1d1d1;
-    border-radius: 10px;
-    font-size: 1rem;
-    outline: none;
-    width: 100%;
-    transition: all 0.3s ease;
-}
 
 .add-test-suite-input:focus {
     border-color: #3498db;
@@ -137,7 +128,7 @@ h1 {
 /* Right Panel Styling */
 .right-panel {
     position: fixed;
-    right: -300px;
+    right: -350px;
     top: 0;
     width: 300px;
     height: 100%;
@@ -188,9 +179,9 @@ h1 {
     background-color: #7f8c8d;
 }
 /* General Input Styling */
-.add-project-input,
+
 .add-test-suite-input {
-    width: 90%;  /* Adjust input size */
+    width: 50%;  /* Adjust input size */
     padding: 10px;
     margin-bottom: 15px;
     border: 1px solid #d1d1d1;
