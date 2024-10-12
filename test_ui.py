@@ -3,10 +3,21 @@ import pytest
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
+from selenium import webdriver
+from selenium.webdriver.chrome.options import Options
+
+def setup_chrome_driver():
+    chrome_options = Options()
+    chrome_options.add_argument("--headless")  # Run Chrome in headless mode
+    chrome_options.add_argument("--no-sandbox")  # Bypass OS security model
+    chrome_options.add_argument("--disable-dev-shm-usage")  # Overcome limited resource problems
+    chrome_options.add_argument("--disable-gpu")  # Applicable for running in Linux
+    chrome_options.add_argument("--window-size=1920x1080")  # Set window size if needed
+    return webdriver.Chrome(options=chrome_options)
 
 @pytest.fixture
 def browser():
-    driver = webdriver.Chrome()  # Or use webdriver.Firefox() for Firefox
+    driver = setup_chrome_driver()  # Or use webdriver.Firefox() for Firefox
     driver.get("http://127.0.0.1:5000")  # Replace with your app's URL
     yield driver
     driver.quit()

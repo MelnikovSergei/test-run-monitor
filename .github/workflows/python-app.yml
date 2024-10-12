@@ -17,43 +17,39 @@ jobs:
     - name: Set up Docker Buildx
       uses: docker/setup-buildx-action@v1
 
-    # Step 3: Install Docker Compose
+    # Step 3: Install Docker Compose (download the standalone binary)
     - name: Install Docker Compose
       run: |
-        sudo apt-get update
-        sudo apt-get install docker-compose-plugin
+        sudo curl -L "https://github.com/docker/compose/releases/download/v2.15.1/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
+        sudo chmod +x /usr/local/bin/docker-compose
+        docker-compose --version
 
-    # Step 4: Build and run the application using Docker Compose
-    - name: Build and run app with Docker Compose
-      run: |
-        docker compose up --build -d
-
-    # Step 5: Wait for Docker app to be ready
-    - name: Wait for the app to be ready
-      run: |
-        # Retry waiting for the application to start (replace with your URL)
-        for i in `seq 1 10`; do
-          curl http://localhost:5000 && break
-          sleep 5
-        done
-
-    # Step 6: Set up Python
+    # Step 4: Set up Python environment (for running Selenium tests)
     - name: Set up Python
       uses: actions/setup-python@v2
       with:
-        python-version: '3.x'
-
-    # Step 7: Install dependencies
+        python-version: '3.9'
+    
     - name: Install dependencies
       run: |
+        python -m pip install --upgrade pip
         pip install selenium pytest
 
-    # Step 8: Run the tests using pytest
-    - name: Run UI tests
+    # Step 5: Create the necessary environment and build the Docker container
+    - name: Run docker-compose up --build
       run: |
-        pytest test_ui.py --maxfail=1 --disable-warnings
+        docker-compose up --build -d
+    
+    # Step 6: Wait for the app to be ready (you might need to adjust this sleep time)
+    - name: Wait for the app to be ready
+      run: sleep 10  # Adjust this based on the time your app needs to be up and running
 
-    # Step 9: Tear down Docker Compose after the tests
-    - name: Tear down Docker Compose
+    # Step 7: Run Selenium tests
+    - name: Run Selenium tests
       run: |
-        docker compose down
+        pytest tests/  # Adjust this to your test path
+
+    # Step 8: Tear down the Docker containers after testing
+    - name: Tear down Docker containers
+      run: |
+        docker-compose down
