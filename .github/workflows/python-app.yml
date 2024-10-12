@@ -41,8 +41,18 @@ jobs:
         docker-compose up --build -d
     
     # Step 6: Wait for the app to be ready (you might need to adjust this sleep time)
-    - name: Wait for the app to be ready
-      run: sleep 10  # Adjust this based on the time your app needs to be up and running
+    - name: Wait for app to be ready
+      run: |
+        timeout=60
+        while ! curl -s http://localhost:8000/health; do
+          if [ $timeout -le 0 ]; then
+            echo "Timed out waiting for app to be ready"
+            exit 1
+          fi
+          echo "Waiting for app to be ready..."
+          sleep 5
+          timeout=$((timeout - 5))
+        done  # Adjust this based on the time your app needs to be up and running
 
     # Step 7: Run Selenium tests
     - name: Run Selenium tests
