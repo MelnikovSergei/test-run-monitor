@@ -3,7 +3,6 @@ import pytest
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
-from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
 
 def setup_chrome_driver():
