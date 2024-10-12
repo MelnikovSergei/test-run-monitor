@@ -5,7 +5,7 @@ on:
     branches: []
 
 jobs:
-  build:
+  Selenium-Tests:
     runs-on: ubuntu-latest
 
     steps:
