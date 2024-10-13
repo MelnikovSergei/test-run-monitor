@@ -20,5 +20,5 @@ services:
       - ./allure-reports:/app/allure-reports  # Generated reports from Allure
     environment:
       CHECK_RESULTS_EVERY_SECONDS: 5  # Allure checks for new results every 5 seconds
-      KEEP_HISTORY: 5  # Keep history of test reports
+      KEEP_HISTORY: 1  # Keep history of test reports
 
