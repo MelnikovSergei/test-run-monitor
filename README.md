@@ -1,3 +1,5 @@
+
+
 ###### skeleton version (still in development). Ideal for practicing automated test writing and mentoring junior developers on a project.
 
 
@@ -15,11 +17,13 @@ This is a web-based application for managing and monitoring test suites and proj
 - **Responsive UI**: User-friendly interface with animations and hover effects.
 - **APIs**: RESTful APIs for project and test suite management.
 
-## Screenshots
 
-### Dashboard
-![Dashboard](./assets/dashboard.png)
-![Dashboard](./assets/dashboard.mp4)
+## Demo
+
+https://github.com/user-attachments/assets/1108130e-6608-4c0c-a068-0b79b5d2e414
+
+
+
 ## Technologies Used
 
 - **Backend**: Flask
