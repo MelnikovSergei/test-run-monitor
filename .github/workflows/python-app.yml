@@ -33,7 +33,7 @@ jobs:
     - name: Install dependencies
       run: |
         python -m pip install --upgrade pip
-        pip install selenium pytest requests
+        pip install selenium pytest requests allure-pytest
 
     # Step 5: Create the necessary environment and build the Docker container
     - name: Run docker-compose up --build
@@ -54,12 +54,29 @@ jobs:
           timeout=$((timeout - 5))
         done  # Adjust this based on the time your app needs to be up and running
 
-    # Step 7: Run tests
+    # Step 7: Run tests and collect Allure results
     - name: Run tests
       run: |
-        pytest tests/  # Adjust this to your test path
+        pytest tests/ --alluredir=allure-results  # Adjust this to your test path
 
-    # Step 8: Tear down the Docker containers after testing
+    # Step 8: Start Allure Docker Service (optional, you can generate reports via CLI if not using this)
+    - name: Start Allure Docker Service
+      run: |
+        docker run -d -p 5050:5050 -v ${GITHUB_WORKSPACE}/allure-results:/app/allure-results -v ${GITHUB_WORKSPACE}/allure-reports:/app/allure-reports frankescobar/allure-docker-service
+
+    # Step 9: Generate the Allure report via Allure Docker Service API
+    - name: Generate Allure Report
+      run: |
+        curl -X POST "http://localhost:5050/generate-report"
+
+    # Step 10: Upload Allure report as an artifact for GitHub Actions
+    - name: Upload Allure Report
+      uses: actions/upload-artifact@v3
+      with:
+        name: allure-report
+        path: allure-reports
+
+    # Step 11: Tear down the Docker containers after testing
     - name: Tear down Docker containers
       run: |
         docker-compose down

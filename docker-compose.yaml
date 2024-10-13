@@ -10,3 +10,15 @@ services:
     environment:
       - FLASK_ENV=development
     command: python app.py
+
+  allure:
+    image: frankescobar/allure-docker-service
+    ports:
+      - "5050:5050"  # Allure report server will be available on localhost:5050
+    volumes:
+      - ./allure-results:/app/allure-results  # Test results from pytest
+      - ./allure-reports:/app/allure-reports  # Generated reports from Allure
+    environment:
+      CHECK_RESULTS_EVERY_SECONDS: 5  # Allure checks for new results every 5 seconds
+      KEEP_HISTORY: 5  # Keep history of test reports
+
