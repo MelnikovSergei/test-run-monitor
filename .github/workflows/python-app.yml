@@ -35,10 +35,21 @@ jobs:
         python -m pip install --upgrade pip
         pip install selenium pytest requests allure-pytest
 
+    # Step 5: Install Allure CLI from GitHub
+    - name: Install Allure CLI
+      run: |
+        ALLURE_VERSION=2.20.1
+        curl -Lo allure-$ALLURE_VERSION.tgz https://github.com/allure-framework/allure2/releases/download/$ALLURE_VERSION/allure-$ALLURE_VERSION.tgz
+        tar -zxvf allure-$ALLURE_VERSION.tgz
+        sudo mv allure-$ALLURE_VERSION /usr/local/bin/allure
+        sudo ln -s /usr/local/bin/allure/bin/allure /usr/bin/allure
+        allure --version
+    
     # Step 5: Clean old Allure data
     - name: Clean old Allure data
       run: |
         rm -rf allure-results allure-report
+
 
     # Step 6: Create allure-results directory and set permissions
     - name: Create allure-results directory
@@ -64,7 +75,7 @@ jobs:
           sleep 5
           timeout=$((timeout - 5))
         done  # Adjust this based on the time your app needs to be up and running
-
+      
     # Step 9: Run tests with Allure
     - name: Run tests
       run: |
@@ -81,6 +92,7 @@ jobs:
       with:
         github_token: ${{ secrets.GITHUB_TOKEN }}
         publish_dir: ./allure-report
+        publish_branch: gh-pages  # Ensure this is set to the correct branch
 
     # Step 12: Tear down the Docker containers after testing
     - name: Tear down Docker containers
