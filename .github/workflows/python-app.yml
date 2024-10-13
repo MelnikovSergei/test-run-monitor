@@ -35,18 +35,25 @@ jobs:
         python -m pip install --upgrade pip
         pip install selenium pytest requests allure-pytest
 
-    # Step 5: Create allure-results directory and set permissions
+    # Step 5: Install Allure CLI
+    - name: Install Allure CLI
+      run: |
+        sudo apt-add-repository ppa:qameta/allure -y
+        sudo apt-get update
+        sudo apt-get install allure -y
+
+    # Step 6: Create allure-results directory and set permissions
     - name: Create allure-results directory
       run: |
         mkdir -p allure-results
         chmod 777 allure-results
 
-    # Step 6: Create the necessary environment and build the Docker container
+    # Step 7: Create the necessary environment and build the Docker container
     - name: Run docker-compose up --build
       run: |
         docker-compose up --build -d
 
-    # Step 7: Wait for the app to be ready
+    # Step 8: Wait for the app to be ready
     - name: Wait for app to be ready
       run: |
         timeout=60
@@ -60,22 +67,24 @@ jobs:
           timeout=$((timeout - 5))
         done  # Adjust this based on the time your app needs to be up and running
 
-    # Step 8: Run tests with Allure
+    # Step 9: Run tests with Allure
     - name: Run tests
       run: |
         pytest tests/ --alluredir=allure-results  # Adjust this to your test path
 
+    # Step 10: Generate Allure Report
     - name: Generate Allure Report
       run: |
         allure generate allure-results --clean -o allure-report
 
+    # Step 11: Deploy Allure Report to GitHub Pages
     - name: Deploy Allure Report to GitHub Pages
       uses: peaceiris/actions-gh-pages@v3
       with:
         github_token: ${{ secrets.GITHUB_TOKEN }}
         publish_dir: ./allure-report
-    
-        # Step 9: Tear down the Docker containers after testing
+
+    # Step 12: Tear down the Docker containers after testing
     - name: Tear down Docker containers
       run: |
         docker-compose down
