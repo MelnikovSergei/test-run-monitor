@@ -26,7 +26,7 @@ jobs:
 
     # Step 4: Set up Python environment
     - name: Set up Python
-      uses: actions/setup-python@v2
+      uses: actions/setup-python@v3
       with:
         python-version: '3.9'
     
@@ -72,7 +72,7 @@ jobs:
 
     # Step 10: Publish Allure Report
     - name: Publish Allure Report
-      uses: actions/upload-artifact@v2
+      uses: actions/upload-artifact@v4
       with:
         name: allure-report
         path: allure-results
