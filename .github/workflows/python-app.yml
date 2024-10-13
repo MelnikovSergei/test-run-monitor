@@ -17,7 +17,7 @@ jobs:
     - name: Set up Docker Buildx
       uses: docker/setup-buildx-action@v3
 
-    # Step 3: Install Docker Compose 
+    # Step 3: Install Docker Compose
     - name: Install Docker Compose
       run: |
         sudo curl -L "https://github.com/docker/compose/releases/download/v2.15.1/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
@@ -26,7 +26,7 @@ jobs:
 
     # Step 4: Set up Python environment
     - name: Set up Python
-      uses: actions/setup-python@v3
+      uses: actions/setup-python@v2
       with:
         python-version: '3.9'
     
@@ -35,12 +35,18 @@ jobs:
         python -m pip install --upgrade pip
         pip install selenium pytest requests allure-pytest
 
-    # Step 5: Create the necessary environment and build the Docker container
+    # Step 5: Create allure-results directory and set permissions
+    - name: Create allure-results directory
+      run: |
+        mkdir -p allure-results
+        chmod 777 allure-results
+
+    # Step 6: Create the necessary environment and build the Docker container
     - name: Run docker-compose up --build
       run: |
         docker-compose up --build -d
-    
-    # Step 6: Wait for the app to be ready
+
+    # Step 7: Wait for the app to be ready
     - name: Wait for app to be ready
       run: |
         timeout=60
@@ -54,29 +60,19 @@ jobs:
           timeout=$((timeout - 5))
         done  # Adjust this based on the time your app needs to be up and running
 
-    # Step 7: Run tests and collect Allure results
+    # Step 8: Run tests with Allure
     - name: Run tests
       run: |
         pytest tests/ --alluredir=allure-results  # Adjust this to your test path
 
-    # Step 8: Start Allure Docker Service (optional, you can generate reports via CLI if not using this)
-    - name: Start Allure Docker Service
-      run: |
-        docker run -d -p 5050:5050 -v ${GITHUB_WORKSPACE}/allure-results:/app/allure-results -v ${GITHUB_WORKSPACE}/allure-reports:/app/allure-reports frankescobar/allure-docker-service
-
-    # Step 9: Generate the Allure report via Allure Docker Service API
-    - name: Generate Allure Report
-      run: |
-        curl -X POST "http://localhost:5050/generate-report"
-
-    # Step 10: Upload Allure report as an artifact for GitHub Actions
-    - name: Upload Allure Report
-      uses: actions/upload-artifact@v3
-      with:
-        name: allure-report
-        path: allure-reports
-
-    # Step 11: Tear down the Docker containers after testing
+    # Step 9: Tear down the Docker containers after testing
     - name: Tear down Docker containers
       run: |
         docker-compose down
+
+    # Step 10: Publish Allure Report
+    - name: Publish Allure Report
+      uses: actions/upload-artifact@v2
+      with:
+        name: allure-report
+        path: allure-results
