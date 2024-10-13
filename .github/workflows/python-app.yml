@@ -86,6 +86,7 @@ jobs:
       with:
         github_token: ${{ secrets.GITHUB_TOKEN }}
         publish_dir: ./allure-report
+        publish_branch: gh-pages  # Ensure this is set to the correct branch
 
     # Step 12: Tear down the Docker containers after testing
     - name: Tear down Docker containers
