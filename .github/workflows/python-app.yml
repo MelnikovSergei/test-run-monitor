@@ -35,12 +35,15 @@ jobs:
         python -m pip install --upgrade pip
         pip install selenium pytest requests allure-pytest
 
-    # Step 5: Install Allure CLI
+    # Step 5: Install Allure CLI from GitHub
     - name: Install Allure CLI
       run: |
-        sudo apt-add-repository ppa:qameta/allure -y
-        sudo apt-get update
-        sudo apt-get install allure -y
+        ALLURE_VERSION=2.20.1
+        curl -Lo allure-$ALLURE_VERSION.tgz https://github.com/allure-framework/allure2/releases/download/$ALLURE_VERSION/allure-$ALLURE_VERSION.tgz
+        tar -zxvf allure-$ALLURE_VERSION.tgz
+        sudo mv allure-$ALLURE_VERSION /usr/local/bin/allure
+        sudo ln -s /usr/local/bin/allure/bin/allure /usr/bin/allure
+        allure --version
 
     # Step 6: Create allure-results directory and set permissions
     - name: Create allure-results directory
