@@ -65,14 +65,17 @@ jobs:
       run: |
         pytest tests/ --alluredir=allure-results  # Adjust this to your test path
 
-    # Step 9: Tear down the Docker containers after testing
+    - name: Generate Allure Report
+      run: |
+        allure generate allure-results --clean -o allure-report
+
+    - name: Deploy Allure Report to GitHub Pages
+      uses: peaceiris/actions-gh-pages@v3
+      with:
+        github_token: ${{ secrets.GITHUB_TOKEN }}
+        publish_dir: ./allure-report
+    
+        # Step 9: Tear down the Docker containers after testing
     - name: Tear down Docker containers
       run: |
         docker-compose down
-
-    # Step 10: Publish Allure Report
-    - name: Publish Allure Report
-      uses: actions/upload-artifact@v4
-      with:
-        name: allure-report
-        path: allure-results
