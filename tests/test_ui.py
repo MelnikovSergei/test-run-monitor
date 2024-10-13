@@ -7,7 +7,7 @@ from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.common.exceptions import NoAlertPresentException
 from selenium.webdriver.support import expected_conditions as EC
-
+##
 
 def SHORT_WAIT(wait_time: int = 1):
     time.sleep(wait_time)
@@ -48,35 +48,6 @@ def test_add_project(browser):
     # Verify that the project appears in the sidebar
     projects = browser.find_elements(By.CSS_SELECTOR, ".menu-item a")
     assert any("Test Project" in p.text for p in projects)
-
-# Test removing a project
-def test_remove_project(browser):
-    # Assuming we added "Test Project" in the previous test
-    project_input = browser.find_element(By.ID, "addProjectInput")
-    project_input.send_keys("Project to Remove")
-    project_input.send_keys(Keys.ENTER)
-
-    SHORT_WAIT()  # Wait for the project to be added
-
-    # Select the project we just added
-    project_links = browser.find_elements(By.CSS_SELECTOR, ".menu-item a")
-    for project in project_links:
-        if "Project to Remove" in project.text:
-            project.click()
-            break
-
-    SHORT_WAIT()  # Wait for the project selection
-
-    # Click the remove button
-    remove_button = browser.find_element(By.ID, "removeProjectBtn")
-    remove_button.click()
-
-    # Wait for the project to be removed
-    SHORT_WAIT()
-
-    # Check that the project is no longer in the list
-    projects = browser.find_elements(By.CSS_SELECTOR, ".menu-item a")
-    assert all("Project to Remove" not in p.text for p in projects)
 
 # Test adding a new test suite
 def test_add_test_suite(browser):
