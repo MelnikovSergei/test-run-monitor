@@ -15,7 +15,7 @@ This is a web-based application for managing and monitoring test suites and proj
 
 ### Dashboard
 ![Dashboard](./assets/dashboard.png)
-
+![Dashboard](./assets/dashboard.mp4)
 ## Technologies Used
 
 - **Backend**: Flask
