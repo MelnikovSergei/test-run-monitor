@@ -45,24 +45,24 @@ jobs:
         sudo ln -s /usr/local/bin/allure/bin/allure /usr/bin/allure
         allure --version
     
-    # Step 5: Clean old Allure data
+    # Step 6: Clean old Allure data
     - name: Clean old Allure data
       run: |
         rm -rf allure-results allure-report
 
 
-    # Step 6: Create allure-results directory and set permissions
+    # Step 7: Create allure-results directory and set permissions
     - name: Create allure-results directory
       run: |
         mkdir -p allure-results
         chmod 777 allure-results
 
-    # Step 7: Create the necessary environment and build the Docker container
+    # Step 8: Create the necessary environment and build the Docker container
     - name: Run docker-compose up --build
       run: |
         docker-compose up --build -d
 
-    # Step 8: Wait for the app to be ready
+    # Step 9: Wait for the app to be ready
     - name: Wait for app to be ready
       run: |
         timeout=60
@@ -76,17 +76,17 @@ jobs:
           timeout=$((timeout - 5))
         done  # Adjust this based on the time your app needs to be up and running
       
-    # Step 9: Run tests with Allure
+    # Step 10: Run tests with Allure
     - name: Run tests
       run: |
         pytest tests/ --alluredir=allure-results  # Adjust this to your test path
 
-    # Step 10: Generate Allure Report
+    # Step 11: Generate Allure Report
     - name: Generate Allure Report
       run: |
         allure generate allure-results --clean -o allure-report
 
-    # Step 11: Deploy Allure Report to GitHub Pages
+    # Step 12: Deploy Allure Report to GitHub Pages
     - name: Deploy Allure Report to GitHub Pages
       uses: peaceiris/actions-gh-pages@v3
       with:
@@ -94,7 +94,7 @@ jobs:
         publish_dir: ./allure-report
         publish_branch: gh-pages  # Ensure this is set to the correct branch
 
-    # Step 12: Tear down the Docker containers after testing
+    # Step 13: Tear down the Docker containers after testing
     - name: Tear down Docker containers
       run: |
         docker-compose down
