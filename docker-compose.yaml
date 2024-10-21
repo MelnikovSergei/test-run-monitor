@@ -9,9 +9,10 @@ services:
       - .:/app
     environment:
       - FLASK_ENV=development
+      - RUN_TESTS=${RUN_TESTS:-false}  # Default to false if not set
     command: python app.py
     networks:
-      - app-network  # Updated to match the network at the bottom
+      - app-network
     healthcheck:
       test: ["CMD", "curl", "-f", "http://test_monitor:5000/health"]
       interval: 30s
@@ -21,29 +22,32 @@ services:
   test_runner:
     build:
       context: .
-      dockerfile: Dockerfile.tests  # Ensure you point to the correct Dockerfile for tests
+      dockerfile: Dockerfile.tests
     depends_on:
       test_monitor:
         condition: service_healthy
     volumes:
       - .:/app
       - ./allure-results:/app/allure-results
-    command: ["pytest", "tests/", "--alluredir=/app/allure-results"]
+    environment:
+      - RUN_TESTS=${RUN_TESTS:-true}  # Default to true if not set
+    command: >
+      sh -c "if [ '${RUN_TESTS}' = 'true' ]; then pytest tests/ --alluredir=/app/allure-results; fi"
     networks:
-      - app-network  # Updated to match the network at the bottom
+      - app-network
 
   allure:
     image: frankescobar/allure-docker-service
     ports:
-      - "5050:5050"  # Allure report server will be available on localhost:5050
+      - "5050:5050"
     volumes:
-      - ./allure-results:/app/allure-results  # Test results from pytest
-      - ./allure-reports:/app/allure-reports  # Generated reports from Allure
+      - ./allure-results:/app/allure-results
+      - ./allure-reports:/app/allure-reports
     environment:
-      CHECK_RESULTS_EVERY_SECONDS: 5  # Allure checks for new results every 5 seconds
-      KEEP_HISTORY: 1  # Keep history of test reports
+      CHECK_RESULTS_EVERY_SECONDS: 5
+      KEEP_HISTORY: 1
     networks:
-      - app-network  # Updated to match the network at the bottom
+      - app-network
 
 networks:
   app-network:

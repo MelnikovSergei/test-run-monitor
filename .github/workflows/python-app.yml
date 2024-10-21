@@ -61,7 +61,7 @@ jobs:
     # Step 7: Create the necessary environment and build the Docker container
     - name: Run docker-compose up --build
       run: |
-        docker-compose up --build -d
+        RUN_TESTS=false docker-compose up --build -d  # Set RUN_TESTS to false here
 
     # Step 8: Wait for the app to be ready
     - name: Wait for app to be ready
@@ -75,12 +75,12 @@ jobs:
           echo "Waiting for app to be ready..."
           sleep 5
           timeout=$((timeout - 5))
-        done  # Adjust this based on the time your app needs to be up and running
+        done
 
     # Step 9: Run tests with Allure
     - name: Run tests
       run: |
-        pytest tests/ --alluredir=allure-results  # Adjust this to your test path
+        docker-compose exec -T test_runner pytest tests/ --alluredir=/app/allure-results
 
     # Step 10: Generate Allure Report with clean flag and remove history
     - name: Generate Allure Report
@@ -93,7 +93,7 @@ jobs:
       with:
         github_token: ${{ secrets.GITHUB_TOKEN }}
         publish_dir: ./allure-report
-        publish_branch: gh-pages  # Ensure this is set to the correct branch
+        publish_branch: gh-pages
 
     # Step 12: Tear down the Docker containers after testing
     - name: Tear down Docker containers
