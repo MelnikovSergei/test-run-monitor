@@ -28,8 +28,7 @@ RUN wget -q -O - https://dl.google.com/linux/linux_signing_key.pub | apt-key add
     apt-get clean
 
 # Install ChromeDriver
-RUN CHROMEDRIVER_VERSION=130.0.6723.58\ && \
-    wget -N "https://storage.googleapis.com/chrome-for-testing-public/${CHROMEDRIVER_VERSION}/linux64/chrome-linux64.zip" && \
+RUN wget -N "https://storage.googleapis.com/chrome-for-testing-public/130.0.6723.58/linux64/chrome-linux64.zip" && \
     unzip chrome-linux64.zip && \
     mv chrome-linux64 /usr/local/bin/ && \
     chmod +x /usr/local/bin/chrome-linux64 && \
