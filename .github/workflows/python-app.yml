@@ -14,7 +14,6 @@ jobs:
       uses: actions/checkout@v4
 
     # Step 2: Set up Docker Buildx
-    - name: Set up Docker Buildx
       uses: docker/setup-buildx-action@v3
 
     # Step 3: Install Docker Compose
@@ -58,7 +57,7 @@ jobs:
         mkdir -p allure-results
         chmod 777 allure-results
 
-    # Step 7: Create the necessary environment and build the Docker container
+    # Step 7: Create the necessary environment and build the Docker containers
     - name: Run docker-compose up --build
       run: |
         RUN_TESTS=false docker-compose up --build -d  # Set RUN_TESTS to false here
@@ -77,10 +76,15 @@ jobs:
           timeout=$((timeout - 5))
         done
 
-    # Step 9: Run tests with Allure
+    # Step to check logs for test_runner
+    - name: Check logs for test_runner
+      run: |
+        docker-compose logs test_runner
+
+    # Step 9: Run tests with Allure using the test_runner container
     - name: Run tests
       run: |
-        docker-compose exec -T test_runner pytest tests/ --alluredir=/app/allure-results
+        RUN_TESTS=true docker-compose run --rm test_runner pytest tests/ --alluredir=/app/allure-results
 
     # Step 10: Generate Allure Report with clean flag and remove history
     - name: Generate Allure Report
