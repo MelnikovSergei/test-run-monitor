@@ -2,7 +2,7 @@ import pytest
 import requests
 
 # Base URL for your Flask app
-BASE_URL = "http://127.0.0.1:5000"  # Ensure your app is running on this URL
+BASE_URL = "http://test_monitor:5000" # Ensure your app is running on this URL
 
 # Test adding a new project
 def test_add_project():

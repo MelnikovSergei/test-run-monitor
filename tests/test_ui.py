@@ -29,7 +29,7 @@ def setup_chrome_driver():
 @pytest.fixture
 def browser():
     driver = setup_chrome_driver()  # Or use webdriver.Firefox() for Firefox
-    driver.get("http://127.0.0.1:5000")  # Replace with your app's URL
+    driver.get("http://test_monitor:5000")  # Replace with your app's URL
     yield driver
     driver.quit()
 

@@ -10,6 +10,27 @@ services:
     environment:
       - FLASK_ENV=development
     command: python app.py
+    networks:
+      - app-network  # Updated to match the network at the bottom
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://test_monitor:5000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+
+  test_runner:
+    build:
+      context: .
+      dockerfile: Dockerfile.tests  # Ensure you point to the correct Dockerfile for tests
+    depends_on:
+      test_monitor:
+        condition: service_healthy
+    volumes:
+      - .:/app
+      - ./allure-results:/app/allure-results
+    command: ["pytest", "tests/", "--alluredir=/app/allure-results"]
+    networks:
+      - app-network  # Updated to match the network at the bottom
 
   allure:
     image: frankescobar/allure-docker-service
@@ -21,4 +42,9 @@ services:
     environment:
       CHECK_RESULTS_EVERY_SECONDS: 5  # Allure checks for new results every 5 seconds
       KEEP_HISTORY: 1  # Keep history of test reports
+    networks:
+      - app-network  # Updated to match the network at the bottom
 
+networks:
+  app-network:
+    driver: bridge

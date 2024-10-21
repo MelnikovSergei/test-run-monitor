@@ -142,6 +142,10 @@ def delete_test_suite(test_suite_id):
 
     return '', 204
 
+@app.route('/health', methods=['GET'])
+def health_check():
+    return jsonify({"status": "healthy"}), 200  # Return a 200 OK response
+
 if __name__ == '__main__':
     # Ensure tables are created when the application starts
     create_tables()

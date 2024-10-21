@@ -1,0 +1,15 @@
+# Dockerfile for test container
+
+FROM python:3.9-slim
+
+WORKDIR /app
+
+# Install necessary dependencies
+COPY requirements.txt .
+RUN pip install --upgrade pip && pip install -r requirements.txt
+
+# Copy the source code to the container
+COPY . .
+
+# Set the default command to run pytest
+CMD ["pytest", "tests/", "--alluredir=allure-results"]
