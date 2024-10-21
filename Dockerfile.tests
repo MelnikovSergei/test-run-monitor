@@ -2,6 +2,39 @@
 
 FROM python:3.9-slim
 
+# Install necessary dependencies
+RUN apt-get update && apt-get install -y \
+    curl \
+    unzip \
+    wget \
+    gnupg \
+    libnss3 \
+    libgconf-2-4 \
+    libxss1 \
+    libx11-xcb1 \
+    libxcb1 \
+    fonts-liberation \
+    libappindicator3-1 \
+    libatk-bridge2.0-0 \
+    libgtk-3-0 \
+    x11-utils \
+    && apt-get clean
+
+# Install Google Chrome
+RUN wget -q -O - https://dl.google.com/linux/linux_signing_key.pub | apt-key add - && \
+    echo "deb [arch=amd64] http://dl.google.com/linux/chrome/deb/ stable main" >> /etc/apt/sources.list.d/google-chrome.list && \
+    apt-get update && \
+    apt-get install -y google-chrome-stable && \
+    apt-get clean
+
+# Install ChromeDriver
+RUN CHROMEDRIVER_VERSION=130.0.6723.58\ && \
+    wget -N "https://storage.googleapis.com/chrome-for-testing-public/${CHROMEDRIVER_VERSION}/linux64/chrome-linux64.zip" && \
+    unzip chrome-linux64.zip && \
+    mv chrome-linux64 /usr/local/bin/ && \
+    chmod +x /usr/local/bin/chrome-linux64 && \
+    rm chrome-linux64.zip
+
 WORKDIR /app
 
 # Install necessary dependencies
