@@ -58,10 +58,10 @@ jobs:
         mkdir -p allure-results
         chmod 777 allure-results
 
-    # Step 7: Create the necessary environment and build the Docker container
-    - name: Run docker-compose up --build
+    # Step 7:Build and Start App Container without Tests
+    - name: Build and Start App Container
       run: |
-        RUN_TESTS=false docker-compose up --build -d  # Set RUN_TESTS to false here
+          docker-compose up --build -d test_monitor allure  # Start only the app, not the test runner
 
     # Step 8: Wait for the app to be ready
     - name: Wait for app to be ready
@@ -76,14 +76,15 @@ jobs:
           sleep 5
           timeout=$((timeout - 5))
         done
-    # Step to check logs for test_runner
-    - name: Check logs for test_runner
-      run: |
-        docker-compose logs test_runner
+   
     # Step 9: Run tests with Allure
-    - name: Run tests
+    - name: Build and Run Test Container
       run: |
-        docker-compose exec -T test_runner pytest tests/ --alluredir=/app/allure-results
+        # Build the test_runner container using Dockerfile.tests
+        docker-compose build test_runner
+
+        # Run the tests in the test_runner container
+        docker-compose run test_runner pytest tests/ --alluredir=/app/allure-results
 
     # Step 10: Generate Allure Report with clean flag and remove history
     - name: Generate Allure Report
